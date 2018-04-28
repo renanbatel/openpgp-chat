@@ -1,0 +1,32 @@
+{
+  "name": "openpgp-chat",
+  "version": "0.0.1",
+  "description": "OpenPGP Desktop Chat",
+  "main": "index.js",
+  "license": "MIT",
+  "contributors": [
+    {
+      "name": "Renan Batel",
+      "email": "renanbatel@gmail.com"
+    },
+    {
+      "name": "Mateus Merscher"
+    },
+    {
+      "name": "Gabriel Romero"
+    }
+  ],
+  "scripts": {
+    "start": "npx electron app/main.js",
+    "sass": "npx node-sass -r --output-style nested app/src/styles/main.scss -o app",
+    "sass:w": "npm run sass && npm run sass -- -w"
+  },
+  "devDependencies": {
+    "electron": "^1.8.4",
+    "electron-reload": "^1.2.2",
+    "node-sass": "^4.9.0"
+  },
+  "dependencies": {
+    "materialize-css": "^0.100.2"
+  }
+}
