@@ -5,6 +5,7 @@ require( 'electron-reload' )( __dirname );
 const electron    = require( 'electron' );
 const path        = require( 'path' );
 const url         = require( 'url' );
+var openpgp       = require( 'openpgp' ); 
 
 const app           = electron.app;
 const BrowserWindow = electron.BrowserWindow;

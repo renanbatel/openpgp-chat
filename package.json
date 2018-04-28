@@ -27,6 +27,7 @@
     "node-sass": "^4.9.0"
   },
   "dependencies": {
-    "materialize-css": "^0.100.2"
+    "materialize-css": "^0.100.2",
+    "openpgp": "^3.0.8"
   }
 }
