@@ -28,6 +28,9 @@
     "node-sass": "^4.9.0"
   },
   "dependencies": {
-    "materialize-css": "^0.100.2"
+    "firebase": "^4.13.1",
+    "firebase-tools": "^3.18.4",
+    "materialize-css": "^0.100.2",
+    "requirejs": "^2.3.5"
   }
 }
