@@ -13,7 +13,8 @@
       "name": "Mateus Merscher"
     },
     {
-      "name": "Gabriel Romero"
+      "name": "Gabriel Romero",
+      "email": "gabrielromerods@hotmail.com"
     }
   ],
   "scripts": {
@@ -27,7 +28,6 @@
     "node-sass": "^4.9.0"
   },
   "dependencies": {
-    "materialize-css": "^0.100.2",
-    "openpgp": "^3.0.8"
+    "materialize-css": "^0.100.2"
   }
 }
