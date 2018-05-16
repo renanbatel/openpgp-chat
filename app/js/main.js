@@ -9,18 +9,30 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var btnLogar = document.getElementById('login');
+var btnCadastrar = document.getElementById('cadastrar');
+var btnLogin = document.getElementById('login');
 
-btnLogar.addEventListener('click', function(){
+btnCadastrar.addEventListener('click', function(){
     var email = document.getElementById('email').value;
     var senha =  document.getElementById('senha').value;
-
-    firebase.auth().createUserWithEmailAndPassword(email, senha).catch(function(error){
+    firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
+        alert('Usuario Criado')
+    }).catch(function(error){
         if(error != null){
             console.log("erro "+error);
             return;
-        }else{
-            console.log('tudo certo')
+        }
+    });
+});
+
+btnLogin.addEventListener('click', function(){
+    var email = document.getElementById('email').value;
+    var senha =  document.getElementById('senha').value;
+    firebase.auth().signInWithEmailAndPassword(email, senha).then(function(){
+        console.log('logou')
+    }).catch(function(error){
+        if(error != null){
+            console.log('errou')
         }
     });
 });
