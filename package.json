@@ -19,7 +19,7 @@
   ],
   "scripts": {
     "start": "npx electron app/main.js",
-    "sass": "npx node-sass -r --output-style nested app/src/styles/main.scss -o app",
+    "sass": "npx node-sass -r --output-style nested app/styles/main.scss -o app",
     "sass:w": "npm run sass && npm run sass -- -w"
   },
   "devDependencies": {
@@ -30,6 +30,7 @@
   "dependencies": {
     "firebase": "^4.13.1",
     "firebase-tools": "^3.18.4",
+    "handlebars": "^4.0.11",
     "materialize-css": "^0.100.2",
     "requirejs": "^2.3.5"
   }
