@@ -3,6 +3,7 @@
 */
 
 @import 'common/variables';
+@import 'common/global';
 @import 'autoload/materialize';
 
 /**
@@ -10,9 +11,11 @@
  */
 
 @import 'components/buttons';
+@import 'components/panel';
 
 /**
  *  Layouts
  */
 
 @import 'layouts/sidemenu';
+@import 'layouts/login';

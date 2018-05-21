@@ -9,11 +9,58 @@
   <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 </head>
 <body>
-  <h1>Hello World!</h1>
-  <a id="cadastrar" class="waves-effect waves-light btn">button criar usuário</a>
-  <a id="login" class="waves-effect waves-light btn">button logar</a>
-  <input type="text" placeholder="email" id="email">
-  <input type="password" placeholder="senha" id='senha'>
+
+  <div id="app">
+    <div class="app-wrapper">
+      <main id="main">
+        
+        <!-- MAIN -->
+
+        <div id="login_screen" class="login-screen">
+
+          <div class="panel-wrapper">
+            <div class="panel row">
+              <h1 class="panel-title">Entrar no Cryptzap</h1>
+              <form class="row login-form">
+                <div class="input-field col s12">
+                  <input type="text" id="email" name="email">
+                  <label for="email">Email</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="password" id="senha" name="senha">
+                  <label for="senha">Senha</label>
+                </div>
+                <button id="login" class="btn waves-effect waves-light col s12">Entrar</button>
+                <button id="open_signup" class="btn waves-effect waves-light col s12">Criar conta</button>
+              </form>
+            </div>
+  
+            <div id="panel_overlay"></div>
+
+            <div class="panel signup-panel row">
+              <h1 class="panel-title">Quem é você?</h1>
+              <form class="row login-form">
+                <div class="input-field col s12">
+                  <input type="text" id="signup_email" name="signup_email">
+                  <label for="signup_email">Email</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="password" id="signup_senha" name="signup_senha">
+                  <label for="signup_senha">Senha</label>
+                </div>
+                <button id="cadastrar" class="btn waves-effect waves-light col s12">Confirmar</button>
+                <button id="close_signup" class="btn waves-effect waves-light col s12">Cancelar</button>
+              </form>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- END MAIN -->
+
+      </main>
+    </div>
+  </div>
   
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="../node_modules/hammerjs/hammer.min.js"></script>

@@ -1,0 +1,13 @@
+.panel {
+  max-width: 380px;
+  padding: 16px 32px;
+  background-color: map-get( $color, light );
+  box-shadow: 0 22px 32px -12px rgba( 0, 0, 0, .26 );
+}
+
+.panel-title {
+  font-size: 2.2rem;
+  margin: 16px 0 32px 0;
+  font-weight: 600;
+  color: map-get( $color, primary );
+}

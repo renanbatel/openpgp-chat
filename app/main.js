@@ -25,8 +25,11 @@ let mainWindow;
 app.on('ready', () => {
   mainWindow = new BrowserWindow( {
     width:  960,
-    height: 540
+    height: 540,
+    minWidth: 960,
+    minHeight: 540
   } );
+  mainWindow.setMenuBarVisibility( false );
   mainWindow.loadURL(`file://${__dirname}/index.html`);
   // mainWindow.loadURL( url.format( {
   //   pathname: path.join( __dirname, 'index.html' ),

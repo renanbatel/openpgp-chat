@@ -1,3 +1,5 @@
+require( './js/view/login' );
+
 //Aqui se encontra as funções necessárias para interagir com o firebase
 var config = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
@@ -13,8 +15,8 @@ var btnCadastrar = document.getElementById('cadastrar');
 var btnLogin = document.getElementById('login');
 
 btnCadastrar.addEventListener('click', function(){
-    var email = document.getElementById('email').value;
-    var senha =  document.getElementById('senha').value;
+    var email = document.getElementById('signup_email').value;
+    var senha =  document.getElementById('signup_senha').value;
     firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
         alert('Usuario Criado')
     }).catch(function(error){
