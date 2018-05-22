@@ -1,3 +1,4 @@
+require( 'sweetalert' );
 require( './js/view/login' );
 const {ipcRenderer} = require( 'electron' );
 
@@ -21,8 +22,24 @@ btnCadastrar.addEventListener('click', function(event){
     var senha =  document.getElementById('signup_senha').value;
 
     firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
-        alert('Usuario Criado')
-    }).catch(function(error){
+        const login_screen          = document.getElementById( 'login_screen' );
+        const private_key           = document.createElement( 'span' );
+              private_key.className = 'private-key-modal';
+              private_key.innerText = '{{chave privada}}';
+
+        swal( {
+            title: 'Usuário criado com sucesso!',
+            text: 'Utilize sua chave privada para começar a usar:',
+            icon: 'success',
+            buttons: 'Começar',
+            content: private_key
+        } )
+            .then( ( value ) => {
+                setTimeout( () => {
+                    login_screen.classList.remove( 'signup-panel-opened' );
+                }, 200 );
+            } );
+    }).catch(function(error) {
         if(error != null){
             console.log("erro "+error);
             return;
