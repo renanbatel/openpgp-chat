@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenPGP Chat</title>
+    <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
+</head>
+<body>
+
+    <div id="app">
+        <div class="app-wrapper">
+
+            <main id="main">
+                <h1>Deu certo</h1>
+                <div>
+                    <button id="teste-btt">click me</button>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script>
+        var btt = document.querySelector("#teste-btt");
+        btt.addEventListener('click', function(){
+            console.log("tudo tranquilo!");
+        })
+    </script>
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/hammerjs/hammer.min.js"></script>
+    <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+    <script src="js/renderer.js"></script>
+</body>
+</html>

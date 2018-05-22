@@ -1,4 +1,5 @@
 require( './js/view/login' );
+const {ipcRenderer} = require( 'electron' );
 
 //Aqui se encontra as funções necessárias para interagir com o firebase
 var config = {
@@ -14,9 +15,11 @@ firebase.initializeApp(config);
 var btnCadastrar = document.getElementById('cadastrar');
 var btnLogin = document.getElementById('login');
 
-btnCadastrar.addEventListener('click', function(){
+btnCadastrar.addEventListener('click', function(event){
+    event.preventDefault();
     var email = document.getElementById('signup_email').value;
     var senha =  document.getElementById('signup_senha').value;
+
     firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
         alert('Usuario Criado')
     }).catch(function(error){
@@ -27,11 +30,12 @@ btnCadastrar.addEventListener('click', function(){
     });
 });
 
-btnLogin.addEventListener('click', function(){
+btnLogin.addEventListener('click', function(event){
+    event.preventDefault();
     var email = document.getElementById('email').value;
     var senha =  document.getElementById('senha').value;
     firebase.auth().signInWithEmailAndPassword(email, senha).then(function(){
-        console.log('logou')
+        ipcRenderer.send('abrir-home');   
     }).catch(function(error){
         if(error != null){
             console.log('errou')
