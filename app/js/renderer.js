@@ -15,6 +15,8 @@ firebase.initializeApp(config);
 
 var btnCadastrar = document.getElementById('cadastrar');
 var btnLogin = document.getElementById('login');
+var btnLogout = null;
+const dbRefMensagem = firebase.database().ref().child('mensagens'); //cria referencia no bd
 
 btnCadastrar.addEventListener('click', function(event){
     event.preventDefault();
@@ -63,4 +65,15 @@ btnLogin.addEventListener('click', function(event) {
             console.log('errou')
         }
     });
+});
+
+function retornaUsuario(){
+    if(firebase.auth().currentUser){
+        return true;
+    }
+    return false;
+}
+
+btnLogout.addEventListener('click', e =>{
+    firebase.auth().signOut();
 });
