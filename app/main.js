@@ -1,5 +1,6 @@
 'use strict'
 require( 'electron-reload' )( __dirname );
+const {ipcMain} = require( 'electron' );
 
 const electron    = require( 'electron' );
 // const path        = require( 'path' );
@@ -40,4 +41,7 @@ app.on('ready', () => {
 
 app.on('window-all-closed', () =>{
   app.quit();
+})
+ipcMain.on('abrir-home', () =>{
+  mainWindow.loadURL(`file://${__dirname}/home.html`);
 })

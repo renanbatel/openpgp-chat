@@ -1,3 +1,16 @@
 #main {
   overflow: hidden;
 }
+
+#logo {
+  margin: 0 0 24px 0;
+  color: map-get( $color, light );
+}
+
+.input-field.col {
+  padding: 0;
+
+  label {
+    left: 0;
+  }
+}
