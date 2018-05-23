@@ -47,13 +47,18 @@ btnCadastrar.addEventListener('click', function(event){
     });
 });
 
-btnLogin.addEventListener('click', function(event){
+btnLogin.addEventListener('click', function(event) {
     event.preventDefault();
-    var email = document.getElementById('email').value;
-    var senha =  document.getElementById('senha').value;
+    var   email      = document.getElementById('email').value;
+    var   senha      = document.getElementById('senha').value;
+    const login_form = document.getElementById( 'login_form' );
+
+    login_form.classList.add( 'loading' );
+
     firebase.auth().signInWithEmailAndPassword(email, senha).then(function(){
         ipcRenderer.send('abrir-home');   
     }).catch(function(error){
+        login_form.classList.remove( 'loading' );
         if(error != null){
             console.log('errou')
         }

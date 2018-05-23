@@ -1,10 +1,12 @@
 .login-screen {
   position: relative;
   display: flex;
+  flex-flow: column;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  background: linear-gradient( to bottom, map-get( $color, primary ), darken( map-get( $color, primary ), 8% ) );
 
   .panel-wrapper {
     position: relative;
@@ -53,6 +55,28 @@
     pointer-events: none;
     z-index: 1;
   }
+  .login-form {
+    position: relative;
+
+    .loader {
+      transition: opacity .18s;
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: -5px;
+      right: -5px;
+      bottom: -5px;
+      left: -5px;
+      opacity: 0.0001;
+      pointer-events: none;
+      background-color: map-get( $color, light );
+      z-index: 1;
+    }
+    &.loading .loader {
+      opacity: 0.9999;
+    }
+  }
   &.signup-panel-opened {
     .signup-panel {
       transition: transform .33s ease-out;
@@ -64,17 +88,79 @@
       opacity: 0.9999;
     }
   }
-  &::before {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 50%;
-    left: 0;
-    background-color: map-get( $color, primary );
-    content: '';
-  }
+  // &::before {
+  //   position: absolute;
+  //   top: 0;
+  //   right: 0;
+  //   bottom: 50%;
+  //   left: 0;
+  //   background-color: map-get( $color, primary );
+  //   content: '';
+  // }
 }
 
 .private-key-modal {
   color: map-get( $color, primary );
+}
+
+.sk-cube-grid {
+  width: 40px;
+  height: 40px;
+  margin: 100px auto;
+}
+
+.sk-cube-grid .sk-cube {
+  width: 33%;
+  height: 33%;
+  background-color: map-get( $color, primary );
+  float: left;
+  -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
+          animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out; 
+}
+.sk-cube-grid .sk-cube1 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s; }
+.sk-cube-grid .sk-cube2 {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s; }
+.sk-cube-grid .sk-cube3 {
+  -webkit-animation-delay: 0.4s;
+          animation-delay: 0.4s; }
+.sk-cube-grid .sk-cube4 {
+  -webkit-animation-delay: 0.1s;
+          animation-delay: 0.1s; }
+.sk-cube-grid .sk-cube5 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s; }
+.sk-cube-grid .sk-cube6 {
+  -webkit-animation-delay: 0.3s;
+          animation-delay: 0.3s; }
+.sk-cube-grid .sk-cube7 {
+  -webkit-animation-delay: 0s;
+          animation-delay: 0s; }
+.sk-cube-grid .sk-cube8 {
+  -webkit-animation-delay: 0.1s;
+          animation-delay: 0.1s; }
+.sk-cube-grid .sk-cube9 {
+  -webkit-animation-delay: 0.2s;
+          animation-delay: 0.2s; }
+
+@-webkit-keyframes sk-cubeGridScaleDelay {
+  0%, 70%, 100% {
+    -webkit-transform: scale3D(1, 1, 1);
+            transform: scale3D(1, 1, 1);
+  } 35% {
+    -webkit-transform: scale3D(0, 0, 1);
+            transform: scale3D(0, 0, 1); 
+  }
+}
+
+@keyframes sk-cubeGridScaleDelay {
+  0%, 70%, 100% {
+    -webkit-transform: scale3D(1, 1, 1);
+            transform: scale3D(1, 1, 1);
+  } 35% {
+    -webkit-transform: scale3D(0, 0, 1);
+            transform: scale3D(0, 0, 1);
+  } 
 }
