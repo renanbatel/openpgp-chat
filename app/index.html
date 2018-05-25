@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OpenPGP Chat</title>
-  <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
   <link rel="stylesheet" href="main.css">
   <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 </head>
@@ -27,10 +26,12 @@
                 <div class="input-field col s12">
                   <input type="text" id="email" name="email">
                   <label for="email">Email</label>
+                  <span id="email_feedback" class="input-feedback"></span>
                 </div>
                 <div class="input-field col s12">
                   <input type="password" id="senha" name="senha">
                   <label for="senha">Senha</label>
+                  <span id="senha_feedback" class="input-feedback"></span>
                 </div>
                 <button id="login" class="btn waves-effect waves-light col s12">Entrar</button>
                 <button id="open_signup" class="btn waves-effect waves-light col s12">Criar conta</button>
@@ -58,10 +59,12 @@
                 <div class="input-field col s12">
                   <input type="text" id="signup_email" name="signup_email">
                   <label for="signup_email">Email</label>
+                  <span id="signup_email_feedback" class="input-feedback"></span>
                 </div>
                 <div class="input-field col s12">
                   <input type="password" id="signup_senha" name="signup_senha">
                   <label for="signup_senha">Senha</label>
+                  <span id="signup_senha_feedback" class="input-feedback"></span>
                 </div>
                 <button id="cadastrar" class="btn waves-effect waves-light col s12">Confirmar</button>
                 <button id="close_signup" class="btn waves-effect waves-light col s12">Cancelar</button>

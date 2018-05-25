@@ -1,3 +1,4 @@
+const validation = require( './js/validation.js' );
 require( 'sweetalert' );
 require( './js/view/login' );
 const {ipcRenderer} = require( 'electron' );
@@ -20,51 +21,58 @@ const dbRefMensagem = firebase.database().ref().child('mensagens'); //cria refer
 
 btnCadastrar.addEventListener('click', function(event){
     event.preventDefault();
-    var email = document.getElementById('signup_email').value;
-    var senha =  document.getElementById('signup_senha').value;
+    
+    if( validation.validateSignup() ) {
+        var email = document.getElementById('signup_email').value;
+        var senha =  document.getElementById('signup_senha').value;
 
-    firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
-        const login_screen          = document.getElementById( 'login_screen' );
-        const private_key           = document.createElement( 'span' );
-              private_key.className = 'private-key-modal';
-              private_key.innerText = '{{chave privada}}';
+        firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
+            const login_screen          = document.getElementById( 'login_screen' );
+            const private_key           = document.createElement( 'span' );
+                    private_key.className = 'private-key-modal';
+                    private_key.innerText = '{{chave privada}}';
 
-        swal( {
-            title: 'Usuário criado com sucesso!',
-            text: 'Utilize sua chave privada para começar a usar:',
-            icon: 'success',
-            buttons: 'Começar',
-            content: private_key
-        } )
-            .then( ( value ) => {
-                setTimeout( () => {
-                    login_screen.classList.remove( 'signup-panel-opened' );
-                }, 200 );
-            } );
-    }).catch(function(error) {
-        if(error != null){
-            console.log("erro "+error);
-            return;
-        }
-    });
+            swal( {
+                title: 'Usuário criado com sucesso!',
+                text: 'Utilize sua chave privada para começar a usar:',
+                icon: 'success',
+                buttons: 'Começar',
+                content: private_key
+            } )
+                .then( ( value ) => {
+                    setTimeout( () => {
+                        login_screen.classList.remove( 'signup-panel-opened' );
+                    }, 200 );
+                } );
+        }).catch(function(error) {
+            if(error != null){
+                console.log("erro "+error);
+                return;
+            }
+        });
+    }
 });
 
 btnLogin.addEventListener('click', function(event) {
+    
     event.preventDefault();
-    var   email      = document.getElementById('email').value;
-    var   senha      = document.getElementById('senha').value;
-    const login_form = document.getElementById( 'login_form' );
+    
+    if( validation.validateLogin() ) {
+        var   email      = document.getElementById('email').value;
+        var   senha      = document.getElementById('senha').value;
+        const login_form = document.getElementById( 'login_form' );
 
-    login_form.classList.add( 'loading' );
+        login_form.classList.add( 'loading' );
 
-    firebase.auth().signInWithEmailAndPassword(email, senha).then(function(){
-        ipcRenderer.send('abrir-home');   
-    }).catch(function(error){
-        login_form.classList.remove( 'loading' );
-        if(error != null){
-            console.log('errou')
-        }
-    });
+        firebase.auth().signInWithEmailAndPassword(email, senha).then(function(){
+            ipcRenderer.send('abrir-home');   
+        }).catch(function(error){
+            login_form.classList.remove( 'loading' );
+            if(error != null){
+                console.log('errou')
+            }
+        });
+    }
 });
 
 function retornaUsuario(){
@@ -74,6 +82,8 @@ function retornaUsuario(){
     return false;
 }
 
-btnLogout.addEventListener('click', e =>{
-    firebase.auth().signOut();
-});
+try {
+    btnLogout.addEventListener('click', e =>{
+        firebase.auth().signOut();
+    });
+} catch( err ) {}

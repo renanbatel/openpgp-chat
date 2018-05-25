@@ -1,0 +1,47 @@
+.input-field {
+  margin-bottom: 20px;
+
+  input:not( [ type ] ),
+  input[type=text]:not( .browser-default ),
+  input[type=password]:not( .browser-default ),
+  input[type=email]:not( .browser-default ),
+  input[type=url]:not( .browser-default ),
+  input[type=time]:not( .browser-default ),
+  input[type=date]:not( .browser-default ),
+  input[type=datetime]:not( .browser-default ),
+  input[type=datetime-local]:not( .browser-default ),
+  input[type=tel]:not( .browser-default ),
+  input[type=number]:not( .browser-default ),
+  input[type=search]:not( .browser-default ),
+  textarea.materialize-textarea {
+    margin-bottom: 8px;
+  }
+
+  //  ##  Error
+  input[type=text]:not( .browser-default ).error,
+  input[type=password]:not( .browser-default ).error {
+    border-color: map-get( $color, error );
+    box-shadow: 0 1px 0 0 map-get( $color, error );
+
+    & + label {
+      color: map-get( $color, error );
+    }
+    & ~ .input-feedback {
+      color: map-get( $color, error );
+    }
+  }
+
+  //  ##  Success
+  input[type=text]:not( .browser-default ).success,
+  input[type=password]:not( .browser-default ).success {
+    border-color: map-get( $color, success );
+    box-shadow: 0 1px 0 0 map-get( $color, success );
+
+    & + label {
+      color: map-get( $color, success );
+    }
+    & ~ .input-feedback {
+      display: none;
+    }
+  }
+}

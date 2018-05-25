@@ -25,10 +25,10 @@ let mainWindow;
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow( {
-    width:  960,
-    height: 540,
-    minWidth: 960,
-    minHeight: 540
+    width:  1280,
+    height: 720,
+    minWidth: 1280,
+    minHeight: 720
   } );
   mainWindow.setMenuBarVisibility( false );
   mainWindow.loadURL(`file://${__dirname}/index.html`);
