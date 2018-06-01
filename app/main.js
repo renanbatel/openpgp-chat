@@ -43,5 +43,6 @@ app.on('window-all-closed', () =>{
   app.quit();
 })
 ipcMain.on('abrir-home', () =>{
+
   mainWindow.loadURL(`file://${__dirname}/home.html`);
 })

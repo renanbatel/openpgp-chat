@@ -28,6 +28,7 @@
     "node-sass": "^4.9.0"
   },
   "dependencies": {
+    "ejs": "^2.6.1",
     "firebase": "^4.13.1",
     "firebase-tools": "^3.18.4",
     "handlebars": "^4.0.11",
