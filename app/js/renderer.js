@@ -15,9 +15,8 @@ firebase.initializeApp(config);
 
 var btnCadastrar = document.getElementById('cadastrar');
 var btnLogin = document.getElementById('login');
-var btnLogout = null;
+var btnLogout = document.getElementById('logo-out');
 var database = firebase.database();
-var usuRef = database.ref('usuario');
 
 btnCadastrar.addEventListener('click', function (event) {
     event.preventDefault();
@@ -26,7 +25,9 @@ btnCadastrar.addEventListener('click', function (event) {
         var senha = document.getElementById('signup_senha').value;
         var nome = document.getElementById('signup_nome').value;
         firebase.auth().createUserWithEmailAndPassword(email, senha).then(res => {
-            salvaUsu(nome, email);
+            salvaUsu(nome, email, res.user.uid);
+            addContato(res.user.uid);
+            addContato(res.user.uid);
             const login_screen = document.getElementById('login_screen');
             const private_key = document.createElement('span');
             private_key.className = 'private-key-modal';
@@ -86,12 +87,13 @@ function retornaUsuario() { //testar
     return false;
 }
 
-function salvaUsu(nome, email) {
-    this.usuRef.push({
+function salvaUsu(nome, email, uid) {
+    var usuRef = this.database.ref('usuarios/'+ uid + '/informacoes');
+    usuRef.push({
         name: nome,
         email: email,
-        contatos: any[],
-        //contatos, chave pública
+        id: uid,
+        //chave pública
     });
 }
 
@@ -103,6 +105,9 @@ function enviarMensagem(){
     //to do
 }
 
-function addContato(){
-    //to do
+function addContato(uid){
+    var usuRef = this.database.ref('usuarios/'+ uid + '/contatos');
+    usuRef.push({
+        nome: 'ze', uid:'1111', chavePublica: '1234'
+    });
 }
