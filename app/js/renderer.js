@@ -27,7 +27,7 @@ btnCadastrar.addEventListener('click', function (event) {
         firebase.auth().createUserWithEmailAndPassword(email, senha).then(res => {
             salvaUsu(nome, email, res.user.uid);
             addContato(res.user.uid);
-            addContato(res.user.uid);
+            // addContato(res.user.uid);
             const login_screen = document.getElementById('login_screen');
             const private_key = document.createElement('span');
             private_key.className = 'private-key-modal';
@@ -80,15 +80,8 @@ btnLogout.addEventListener('click', e => {
     firebase.auth().signOut();
 });
 
-function retornaUsuario() { //testar
-    if (firebase.auth().currentUser) {
-        return true;
-    }
-    return false;
-}
-
 function salvaUsu(nome, email, uid) {
-    var usuRef = this.database.ref('usuarios/'+ uid + '/informacoes');
+    var usuRef = this.database.ref('usuarios/' + uid + '/informacoes');
     usuRef.push({
         name: nome,
         email: email,
@@ -97,17 +90,40 @@ function salvaUsu(nome, email, uid) {
     });
 }
 
-function recebeMensagem(){
+function addContato(uid) {
+    var email = "romero@gmail.com"; //aqui será o email pra add o contato
+    var usuarios = getAllUsuarios(uid);
+    //1- filtrar pra pegar apenas a informações
+    //2- fazer um forEach e comparar o email
+    //3- se algum usuário tiver email, add ele nos contatos (usar o push)
+    var usuRef = this.database.ref('usuarios/' + uid + '/contatos');
+    usuRef.push({
+        nome: 'ze', uid: '1111', chavePublica: '1234'
+    });
+}
+
+function getAllUsuarios(uid) {
+    var usuarios = this.database.ref('usuarios');
+    var usuInfo = [];
+    usuarios.once('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+            usuInfo.push(childSnapshot.val());
+        });
+      });
+    return usuInfo;
+}
+
+function retornaUsuarioLogado() { //testar
+    if (firebase.auth().currentUser) {
+        return true;
+    }
+    return false;
+}
+
+function recebeMensagem() {
     //TO DO
 }
 
-function enviarMensagem(){
+function enviarMensagem() {
     //to do
-}
-
-function addContato(uid){
-    var usuRef = this.database.ref('usuarios/'+ uid + '/contatos');
-    usuRef.push({
-        nome: 'ze', uid:'1111', chavePublica: '1234'
-    });
 }
