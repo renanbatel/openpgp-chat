@@ -3,7 +3,6 @@ require('sweetalert');
 require('./js/view/login');
 const { ipcRenderer } = require('electron');
 
-//Aqui se encontra as funções necessárias para interagir com o firebase
 var config = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
     authDomain: "openpgp-chat.firebaseapp.com",
@@ -19,13 +18,6 @@ var btnLogin = document.getElementById('login');
 var btnLogout = null;
 var database = firebase.database();
 var usuRef = database.ref('usuario');
-
-function salvaUsu(nome, email) {
-    this.usuRef.push({
-        name: nome,
-        email: email,
-    });
-}
 
 btnCadastrar.addEventListener('click', function (event) {
     event.preventDefault();
@@ -83,15 +75,34 @@ btnLogin.addEventListener('click', function (event) {
     }
 });
 
-function retornaUsuario() {
+btnLogout.addEventListener('click', e => {
+    firebase.auth().signOut();
+});
+
+function retornaUsuario() { //testar
     if (firebase.auth().currentUser) {
         return true;
     }
     return false;
 }
 
-try {
-    btnLogout.addEventListener('click', e => {
-        firebase.auth().signOut();
+function salvaUsu(nome, email) {
+    this.usuRef.push({
+        name: nome,
+        email: email,
+        contatos: any[],
+        //contatos, chave pública
     });
-} catch (err) { }
+}
+
+function recebeMensagem(){
+    //TO DO
+}
+
+function enviarMensagem(){
+    //to do
+}
+
+function addContato(){
+    //to do
+}
