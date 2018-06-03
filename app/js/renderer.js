@@ -1,7 +1,7 @@
-const validation = require( './js/validation.js' );
-require( 'sweetalert' );
-require( './js/view/login' );
-const {ipcRenderer} = require( 'electron' );
+const validation = require('./js/validation.js');
+require('sweetalert');
+require('./js/view/login');
+const { ipcRenderer } = require('electron');
 
 //Aqui se encontra as funções necessárias para interagir com o firebase
 var config = {
@@ -17,73 +17,81 @@ firebase.initializeApp(config);
 var btnCadastrar = document.getElementById('cadastrar');
 var btnLogin = document.getElementById('login');
 var btnLogout = null;
-const dbRefMensagem = firebase.database().ref().child('mensagens'); //cria referencia no bd
+var database = firebase.database();
+var usuRef = database.ref('usuario');
 
-btnCadastrar.addEventListener('click', function(event){
+function salvaUsu(nome, email) {
+    this.usuRef.push({
+        name: nome,
+        email: email,
+    });
+}
+
+btnCadastrar.addEventListener('click', function (event) {
     event.preventDefault();
-    
-    if( validation.validateSignup() ) {
+    if (validation.validateSignup()) {
         var email = document.getElementById('signup_email').value;
-        var senha =  document.getElementById('signup_senha').value;
+        var senha = document.getElementById('signup_senha').value;
+        var nome = document.getElementById('signup_nome').value;
+        firebase.auth().createUserWithEmailAndPassword(email, senha).then(res => {
+            salvaUsu(nome, email);
+            const login_screen = document.getElementById('login_screen');
+            const private_key = document.createElement('span');
+            private_key.className = 'private-key-modal';
+            private_key.innerText = '{{chave privada}}';
 
-        firebase.auth().createUserWithEmailAndPassword(email, senha).then(function(){
-            const login_screen          = document.getElementById( 'login_screen' );
-            const private_key           = document.createElement( 'span' );
-                    private_key.className = 'private-key-modal';
-                    private_key.innerText = '{{chave privada}}';
-
-            swal( {
+            swal({
                 title: 'Usuário criado com sucesso!',
                 text: 'Utilize sua chave privada para começar a usar:',
                 icon: 'success',
                 buttons: 'Começar',
                 content: private_key
-            } )
-                .then( ( value ) => {
-                    setTimeout( () => {
-                        login_screen.classList.remove( 'signup-panel-opened' );
-                    }, 200 );
-                } );
-        }).catch(function(error) {
-            if(error != null){
-                console.log("erro "+error);
+            })
+                .then((value) => {
+                    setTimeout(() => {
+                        login_screen.classList.remove('signup-panel-opened');
+                    }, 200);
+                });
+        }).catch(function (error) {
+            if (error != null) {
+                console.log("erro " + error);
                 return;
             }
         });
     }
 });
 
-btnLogin.addEventListener('click', function(event) {
-    
+btnLogin.addEventListener('click', function (event) {
+
     event.preventDefault();
-    
-    if( validation.validateLogin() ) {
-        var   email      = document.getElementById('email').value;
-        var   senha      = document.getElementById('senha').value;
-        const login_form = document.getElementById( 'login_form' );
 
-        login_form.classList.add( 'loading' );
+    if (validation.validateLogin()) {
+        var email = document.getElementById('email').value;
+        var senha = document.getElementById('senha').value;
+        const login_form = document.getElementById('login_form');
 
-        firebase.auth().signInWithEmailAndPassword(email, senha).then(function(){
-            ipcRenderer.send('abrir-home');   
-        }).catch(function(error){
-            login_form.classList.remove( 'loading' );
-            if(error != null){
+        login_form.classList.add('loading');
+
+        firebase.auth().signInWithEmailAndPassword(email, senha).then(function () {
+            ipcRenderer.send('abrir-home');
+        }).catch(function (error) {
+            login_form.classList.remove('loading');
+            if (error != null) {
                 console.log('errou')
             }
         });
     }
 });
 
-function retornaUsuario(){
-    if(firebase.auth().currentUser){
+function retornaUsuario() {
+    if (firebase.auth().currentUser) {
         return true;
     }
     return false;
 }
 
 try {
-    btnLogout.addEventListener('click', e =>{
+    btnLogout.addEventListener('click', e => {
         firebase.auth().signOut();
     });
-} catch( err ) {}
+} catch (err) { }

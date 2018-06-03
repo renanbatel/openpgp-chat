@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,12 +8,13 @@
   <link rel="stylesheet" href="main.css">
   <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 </head>
+
 <body>
 
   <div id="app">
     <div class="app-wrapper">
       <main id="main">
-        
+
         <!-- MAIN -->
 
         <div id="login_screen" class="login-screen">
@@ -50,12 +52,17 @@
                 </div>
               </form>
             </div>
-  
+
             <div id="panel_overlay"></div>
 
             <div class="panel signup-panel row">
               <h1 class="panel-title">Quem é você?</h1>
               <form class="row login-form">
+                <div class="input-field col s12">
+                  <input type="text" id="signup_nome" name="signup_nome">
+                  <label for="signup_nome">Nome</label>
+                  <span id="signup_nome_feedback" class="input-feedback"></span>
+                </div>
                 <div class="input-field col s12">
                   <input type="text" id="signup_email" name="signup_email">
                   <label for="signup_email">Email</label>
@@ -79,10 +86,12 @@
       </main>
     </div>
   </div>
-  
+
   <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   <script src="../node_modules/hammerjs/hammer.min.js"></script>
   <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
   <script src="js/renderer.js"></script>
 </body>
+
 </html>
