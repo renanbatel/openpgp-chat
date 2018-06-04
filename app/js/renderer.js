@@ -92,25 +92,33 @@ function salvaUsu(nome, email, uid) {
 
 function addContato(uid) {
     var email = "romero@gmail.com"; //aqui será o email pra add o contato
-    var usuarios = getAllUsuarios(uid);
-    //1- filtrar pra pegar apenas a informações
-    //2- fazer um forEach e comparar o email
-    //3- se algum usuário tiver email, add ele nos contatos (usar o push)
-    var usuRef = this.database.ref('usuarios/' + uid + '/contatos');
-    usuRef.push({
-        nome: 'ze', uid: '1111', chavePublica: '1234'
+    getAllUsuarios(uid, (usuarios) => {
+
+        var info = usuarios.map(r => r.informacoes);
+        var usuRef = this.database.ref('usuarios/' + uid + '/contatos');
+
+        info.forEach(i => {
+            var obj = i[Object.keys(i)[0]];
+            if (obj.email == email){
+                usuRef.push({
+                    nome: 'ze', uid: '1111', chavePublica: '1234'
+                });
+            }
+            else
+                console.log('CONTATO NÃO EXISTE FILHA DA PUTA');
+        });
     });
 }
 
-function getAllUsuarios(uid) {
+function getAllUsuarios(uid, callback) {
     var usuarios = this.database.ref('usuarios');
     var usuInfo = [];
-    usuarios.once('value', function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
+    usuarios.once('value', function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
             usuInfo.push(childSnapshot.val());
         });
-      });
-    return usuInfo;
+        callback(usuInfo);
+    });
 }
 
 function retornaUsuarioLogado() { //testar
