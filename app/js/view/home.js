@@ -1,7 +1,7 @@
 var Handlebars = require('Handlebars');
 var template = $("#contatos-template").html();
 var compiledTemplate = Handlebars.compile(template);
-
+var fbase = require('/Users/Mateus/Desktop/openpgp-chat/app/js/firebaseFunctions');
 var usuario = {
     "nome" : "gerso",
     "chavePrivada": '123456',
@@ -16,4 +16,5 @@ var usuario = {
                 "chavePrivada": "chobate"
             }]
 }
-$('#contatos-list').html(compiledTemplate(usuario));
+    console.log('logou certo');
+    $('#contatos-list').html(compiledTemplate(usuario));

@@ -20,8 +20,8 @@ var config = {
 var fire = firebase.initializeApp(config);
 var auth = fire.auth();
 var database = fire.database();
-
 let mainWindow;
+
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow( {
