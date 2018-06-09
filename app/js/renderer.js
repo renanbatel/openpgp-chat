@@ -19,7 +19,10 @@ btnCadastrar.addEventListener('click', function (event) {
 
 btnLogin.addEventListener('click', function (event) {
     event.preventDefault()
-    firebaseFunction.validaLogin();
+    
+    try {
+        firebaseFunction.validaLogin();
+    } catch( err ) {}
 
 });
 
