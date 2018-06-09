@@ -9,9 +9,7 @@ var config = {
     messagingSenderId: "314141157485"
 };
 
-
-
-function validaSignup(){
+function validaSignup() {
 
     var email = document.getElementById('signup_email').value;
     var senha = document.getElementById('signup_senha').value;
@@ -19,36 +17,38 @@ function validaSignup(){
 
     if (validation.validateSignup()) {
 
-    firebase.auth().createUserWithEmailAndPassword(email, senha).then(res => {
-        salvaUsu(nome, email, res.uid);
-        addContato(res.uid);
-        // addContato(res.user.uid);
-        const login_screen = document.getElementById('login_screen');
-        const private_key = document.createElement('span');
-        private_key.className = 'private-key-modal';
-        private_key.innerText = '{{chave privada}}';
+        firebase.auth().createUserWithEmailAndPassword(email, senha).then(res => {
+            salvaUsu(nome, email, res.uid);
+            addContato(res.uid);
+            enviarMensagem('pVQttXlyDMe5y0GfO4Re2kJSOCk2');
+            // addContato(res.user.uid);
+            const login_screen = document.getElementById('login_screen');
+            const private_key = document.createElement('span');
+            private_key.className = 'private-key-modal';
+            private_key.innerText = '{{chave privada}}';
 
-        swal({
-            title: 'Usuário criado com sucesso!',
-            text: 'Utilize sua chave privada para começar a usar:',
-            icon: 'success',
-            buttons: 'Começar',
-            content: private_key
-        })
-            .then((value) => {
-                setTimeout(() => {
-                    login_screen.classList.remove('signup-panel-opened');
-                }, 200);
-            });
-    }).catch(function (error) {
-        if (error != null) {
-            console.log("erro " + error);
-            return;
-        }
-    });
-}}
+            swal({
+                title: 'Usuário criado com sucesso!',
+                text: 'Utilize sua chave privada para começar a usar:',
+                icon: 'success',
+                buttons: 'Começar',
+                content: private_key
+            })
+                .then((value) => {
+                    setTimeout(() => {
+                        login_screen.classList.remove('signup-panel-opened');
+                    }, 200);
+                });
+        }).catch(function (error) {
+            if (error != null) {
+                console.log("erro " + error);
+                return;
+            }
+        });
+    }
+}
 
-function validaLogin(){
+function validaLogin() {
 
     var email = document.getElementById('email').value;
     var senha = document.getElementById('senha').value;
@@ -78,7 +78,7 @@ function salvaUsu(nome, email, uid) {
     });
 }
 
-function logOut(){
+function logOut() {
     firebase.auth().signOut();
 }
 function addContato(uid) {
@@ -91,7 +91,7 @@ function addContato(uid) {
 
         info.forEach(i => {
             var obj = i[Object.keys(i)[0]];
-            if (obj.email == email){
+            if (obj.email == email) {
                 usuRef.push({
                     nome: 'ze', uid: '1111', chavePublica: '1234'
                 });
@@ -124,8 +124,16 @@ function recebeMensagem() {
     //TO DO
 }
 
-function enviarMensagem() {
-    //to do
+function enviarMensagem(ChavePUDestinatario) {
+    //CRIFRAR MENSAGEM, PERGUNTA: CIFRAR AQUI O NO ADDLISTENER ???
+    var user = firebase.auth().currentUser;
+    if (user) {
+        var mens = 'ea man, e o parmera ein? kkkk';
+        var mensagem = this.database.ref('mensagens/');
+        mensagem.push({ uidEmitente: user.uid, uidDestinatario: ChavePUDestinatario, mensagem: mens });
+    }else{
+        console.log('USUARIO NÃO LOGADO')
+    }
 }
 // Exports
 module.exports = {

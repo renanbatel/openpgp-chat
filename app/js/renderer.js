@@ -20,18 +20,9 @@ btnCadastrar.addEventListener('click', function (event) {
 btnLogin.addEventListener('click', function (event) {
     event.preventDefault()
     firebaseFunction.validaLogin();
-
 });
 
 btnLogout.addEventListener('click', e => {
     event.preventDefault()
     firebaseFunction.logOut();
 });
-
-
-
-
-
-
-
-
