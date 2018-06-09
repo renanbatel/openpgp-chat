@@ -9,9 +9,7 @@ var config = {
     messagingSenderId: "314141157485"
 };
 
-
-
-function validaSignup(){
+function validaSignup() {
 
     var email = document.getElementById('signup_email');
     var senha = document.getElementById('signup_senha');
@@ -64,7 +62,7 @@ function validaSignup(){
     });
 }}
 
-function validaLogin(){
+function validaLogin() {
 
     var email = document.getElementById('email');
     var senha = document.getElementById('senha');
@@ -102,7 +100,7 @@ function salvaUsu(nome, email, uid) {
     });
 }
 
-function logOut(){
+function logOut() {
     firebase.auth().signOut();
 }
 function addContato(uid) {
@@ -115,7 +113,7 @@ function addContato(uid) {
 
         info.forEach(i => {
             var obj = i[Object.keys(i)[0]];
-            if (obj.email == email){
+            if (obj.email == email) {
                 usuRef.push({
                     nome: 'ze', uid: '1111', chavePublica: '1234'
                 });
@@ -148,8 +146,16 @@ function recebeMensagem() {
     //TO DO
 }
 
-function enviarMensagem() {
-    //to do
+function enviarMensagem(ChavePUDestinatario) {
+    //CRIFRAR MENSAGEM, PERGUNTA: CIFRAR AQUI O NO ADDLISTENER ???
+    var user = firebase.auth().currentUser;
+    if (user) {
+        var mens = 'ea man, e o parmera ein? kkkk';
+        var mensagem = this.database.ref('mensagens/');
+        mensagem.push({ uidEmitente: user.uid, uidDestinatario: ChavePUDestinatario, mensagem: mens });
+    }else{
+        console.log('USUARIO NÃO LOGADO')
+    }
 }
 // Exports
 module.exports = {
