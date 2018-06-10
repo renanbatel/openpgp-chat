@@ -37,12 +37,12 @@ function validaSignup() {
         salvaUsu(nome.value, email.value, res.uid);
         addContato(res.uid);
         // addContato(res.user.uid);
-        const login_screen          = document.getElementById('login_screen');
+            const login_screen = document.getElementById('login_screen');
         const login_panel           = document.getElementById( 'login_panel' );
         const panel_wrapper         = document.getElementById( 'panel_wrapper' );
-        const private_key           = document.createElement('span');
-              private_key.className = 'private-key-modal';
-              private_key.innerText = '{{chave privada}}';
+            const private_key = document.createElement('span');
+            private_key.className = 'private-key-modal';
+            private_key.innerText = '{{chave privada}}';
 
         signup_form.classList.remove( 'loading' );
 
@@ -53,25 +53,25 @@ function validaSignup() {
         email.classList.remove( 'success' );
         senha.classList.remove( 'success' );
 
-        swal( {
-            title: 'Usuário criado com sucesso!',
-            text: 'Utilize sua chave privada para começar a usar:',
-            icon: 'success',
-            buttons: 'Começar',
-            content: private_key
-        })
-            .then((value) => {
-                setTimeout(() => {
-                    login_screen.classList.remove('signup-panel-opened');
+            swal({
+                title: 'Usuário criado com sucesso!',
+                text: 'Utilize sua chave privada para começar a usar:',
+                icon: 'success',
+                buttons: 'Começar',
+                content: private_key
+            })
+                .then((value) => {
+                    setTimeout(() => {
+                        login_screen.classList.remove('signup-panel-opened');
                     panel_wrapper.style.height = `${ login_panel.offsetHeight }px`;
-                }, 200);
-            });
-    }).catch(function (error) {
-        if (error != null) {
-            console.log("erro " + error);
-            return;
-        }
-    });
+                    }, 200);
+                });
+        }).catch(function (error) {
+            if (error != null) {
+                console.log("erro " + error);
+                return;
+            }
+        });
 }}
 
 function validaLogin() {
@@ -92,7 +92,7 @@ function validaLogin() {
             ipcRenderer.send('abrir-home');
         }).catch(function (error) {
             if (error != null) {
-                login_form.classList.remove('loading');
+            login_form.classList.remove('loading');
                 login_error.innerText = 'Email ou senha invalídos';
                 senha.value           = '';
                 email.classList.remove( 'success' );
@@ -106,12 +106,16 @@ function validaLogin() {
 }
 function salvaUsu(nome, email, uid) {
     var usuRef = database.ref('usuarios/' + uid + '/informacoes');
-    usuRef.push({
-        name: nome,
-        email: email,
-        id: uid,
-        //chave pública
-    });
+    if (usuRef) {
+        usuRef.push({
+            name: nome,
+            email: email,
+            id: uid,
+            //chave pública
+        });
+    } else {
+        console.log('ERRO ao referenciar usuario/informacao no bd salva usuario')
+    }
 }
 
 function logOut() {
@@ -124,17 +128,20 @@ function addContato(uid) {
 
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
-
-        info.forEach(i => {
-            var obj = i[Object.keys(i)[0]];
-            if (obj.email == email) {
-                usuRef.push({
-                    nome: 'ze', uid: '1111', chavePublica: '1234'
-                });
-            }
-            else
-                console.log('CONTATO NÃO EXISTE FILHA DA PUTA');
-        });
+        if (usuRef) {
+            info.forEach(i => {
+                var obj = i[Object.keys(i)[0]];
+                if (obj.email == email) {
+                    usuRef.push({
+                        nome: 'ze', uid: '1111', chavePublica: '1234'
+                    });
+                }
+                else
+                    console.log('CONTATO NÃO EXISTE FILHA DA PUTA');
+            });
+        } else {
+            console.log('ERRO ao referenciar usuario/informacao no bd add contato')
+        }
     });
 }
 
@@ -149,36 +156,44 @@ function getAllUsuarios(uid, callback) {
     });
 }
 
-function retornaUsuarioLogado() { //testar
-
-    if (firebase.auth().currentUser) {
-        return true;
+function carregaMensagem() {
+    var user = firebase.auth().currentUser;
+    var mensagem = this.database.ref('mensagens/');
+    mensagem.off();
+    //verificar os usuários da conversa para assim filtrar
+    //aqui será quando abrir a conversar
+    var setMensagem = function (data) {
+        console.log(data.val())
     }
-    return false;
+
+    if (user) {
+        mensagem.on('child_added', setMensagem);
+        mensagem.on('child_changed', setMensagem);
+    }
 }
+
 function recebeMensagem() {
     //TO DO
 }
 
 function enviarMensagem(ChavePUDestinatario) {
-    //CRIFRAR MENSAGEM, PERGUNTA: CIFRAR AQUI O NO ADDLISTENER ???
     var user = firebase.auth().currentUser;
     if (user) {
-        var mens = 'ea man, e o parmera ein? kkkk';
+        var mens = '7';
         var mensagem = database.ref('mensagens/');
         mensagem.push({ uidEmitente: user.uid, uidDestinatario: ChavePUDestinatario, mensagem: mens });
-    }else{
+    } else {
         console.log('USUARIO NÃO LOGADO')
     }
 }
 // Exports
 module.exports = {
-    retornaUsuarioLogado,
     validaSignup,
     getAllUsuarios,
     addContato,
     logOut,
     salvaUsu,
     validaLogin,
-    validaSignup
+    validaSignup,
+    carregaMensagem
 }
