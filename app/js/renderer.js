@@ -1,5 +1,3 @@
-require('firebase');
-require('sweetalert');
 require('./js/view/login');
 const { ipcRenderer }  = require('electron');
 const firebaseFunction = require('./js/firebaseFunctions.js');

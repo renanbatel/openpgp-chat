@@ -1,8 +1,9 @@
 require('sweetalert');
 const validation = require('./validation');
-const helpers = require( './helpers' );
-var firebase = require('firebase');
-var config = {
+const helpers    = require( './helpers' );
+const openpgp    = require( './cryptografa' );
+const firebase   = require('firebase');
+const config     = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
     authDomain: "openpgp-chat.firebaseapp.com",
     databaseURL: "https://openpgp-chat.firebaseio.com",
@@ -12,9 +13,7 @@ var config = {
 };
 
 firebase.initializeApp(config);
-var database = firebase.database();
-
-var openpgp = require('/Users/Mateus/Desktop/openpgp-chat/app/js/cryptografa')
+const database = firebase.database();
 
 const loginCounter = new helpers.Counter( {
     max: 3,
@@ -168,7 +167,7 @@ function getAllUsuarios(uid, callback) {
 
 function carregaMensagem() {
     var user = firebase.auth().currentUser;
-    var mensagem = this.database.ref('mensagens/');
+    var mensagem = database.ref('mensagens/');
     mensagem.off();
     //verificar os usuários da conversa para assim filtrar
     //aqui será quando abrir a conversar
