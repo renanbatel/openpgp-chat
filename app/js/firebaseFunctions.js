@@ -14,6 +14,8 @@ var config = {
 firebase.initializeApp(config);
 var database = firebase.database();
 
+var openpgp = require('/Users/Mateus/Desktop/openpgp-chat/app/js/cryptografa')
+
 const loginCounter = new helpers.Counter( {
     max: 3,
     timeout: 60,
@@ -34,8 +36,16 @@ function validaSignup() {
     signup_form.classList.add( 'loading' );
 
     firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
-        salvaUsu(nome.value, email.value, res.uid);
-        addContato(res.uid);
+        openpgp.geraChave(nome.value,email.value);
+        setTimeout(() => {
+            let priv = openpgp.getChavePrivada();
+            let public = openpgp.getChavePublica();
+            salvaUsu(nome.value, email.value, res.uid, priv, public);
+            addContato(res.uid);
+            nome.value  = '';
+            email.value = '';
+            senha.value = '';
+        }, 3000);
         // addContato(res.user.uid);
             const login_screen = document.getElementById('login_screen');
         const login_panel           = document.getElementById( 'login_panel' );
@@ -46,9 +56,7 @@ function validaSignup() {
 
         signup_form.classList.remove( 'loading' );
 
-        nome.value  = '';
-        email.value = '';
-        senha.value = '';
+        
         nome.classList.remove( 'success' );
         email.classList.remove( 'success' );
         senha.classList.remove( 'success' );
@@ -104,19 +112,21 @@ function validaLogin() {
         });
     }
 }
-function salvaUsu(nome, email, uid) {
+function salvaUsu(nome, email, uid, priv, public) {
     var usuRef = database.ref('usuarios/' + uid + '/informacoes');
     if (usuRef) {
         usuRef.push({
             name: nome,
             email: email,
             id: uid,
-            //chave pública
+            chavePublica:public,
+            getChavePrivada:priv
         });
     } else {
         console.log('ERRO ao referenciar usuario/informacao no bd salva usuario')
     }
 }
+
 
 function logOut() {
     firebase.auth().signOut();
