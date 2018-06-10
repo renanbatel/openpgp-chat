@@ -11,21 +11,35 @@ var config = {
 
 function validaSignup() {
 
-    var email = document.getElementById('signup_email').value;
-    var senha = document.getElementById('signup_senha').value;
-    var nome = document.getElementById('signup_nome').value;
+    var email = document.getElementById('signup_email');
+    var senha = document.getElementById('signup_senha');
+    var nome = document.getElementById('signup_nome');
 
     if (validation.validateSignup()) {
 
-        firebase.auth().createUserWithEmailAndPassword(email, senha).then(res => {
-            salvaUsu(nome, email, res.uid);
-            //addContato(res.uid);
-            enviarMensagem('mOvrqtnzNtabum2dJnXKmx7XhxV2');
-            carregaMensagem();
+    const signup_form = document.getElementById( 'signup_form' );
+
+    signup_form.classList.add( 'loading' );
+
+    firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
+        salvaUsu(nome.value, email.value, res.uid);
+        addContato(res.uid);
+        // addContato(res.user.uid);
             const login_screen = document.getElementById('login_screen');
+        const login_panel           = document.getElementById( 'login_panel' );
+        const panel_wrapper         = document.getElementById( 'panel_wrapper' );
             const private_key = document.createElement('span');
             private_key.className = 'private-key-modal';
             private_key.innerText = '{{chave privada}}';
+
+        signup_form.classList.remove( 'loading' );
+
+        nome.value  = '';
+        email.value = '';
+        senha.value = '';
+        nome.classList.remove( 'success' );
+        email.classList.remove( 'success' );
+        senha.classList.remove( 'success' );
 
             swal({
                 title: 'Usuário criado com sucesso!',
@@ -37,6 +51,7 @@ function validaSignup() {
                 .then((value) => {
                     setTimeout(() => {
                         login_screen.classList.remove('signup-panel-opened');
+                    panel_wrapper.style.height = `${ login_panel.offsetHeight }px`;
                     }, 200);
                 });
         }).catch(function (error) {
@@ -45,25 +60,32 @@ function validaSignup() {
                 return;
             }
         });
-    }
-}
+}}
 
 function validaLogin() {
 
-    var email = document.getElementById('email').value;
-    var senha = document.getElementById('senha').value;
+    var email = document.getElementById('email');
+    var senha = document.getElementById('senha');
+
+    const login_error           = document.getElementById( 'login_error' );
+          login_error.innerText = '';
+
     if (validation.validateLogin()) {
 
         const login_form = document.getElementById('login_form');
 
         login_form.classList.add('loading');
 
-        firebase.auth().signInWithEmailAndPassword(email, senha).then(function () {
+        firebase.auth().signInWithEmailAndPassword(email.value, senha.value).then(function () {
             ipcRenderer.send('abrir-home');
         }).catch(function (error) {
-            login_form.classList.remove('loading');
             if (error != null) {
-                console.log('errou')
+            login_form.classList.remove('loading');
+                login_error.innerText = 'Email ou senha invalídos';
+                email.classList.remove( 'success' );
+                senha.classList.remove( 'success' );
+                email.classList.add( 'error' );
+                senha.classList.add( 'error' );
             }
         });
     }

@@ -1,5 +1,46 @@
 const Validator = require( 'validator' );
 
+//  ## Common
+
+function validated( input, feedback ) {
+
+  input.classList.remove( 'error' );
+  input.classList.add( 'success' );
+  feedback.innerText = '';
+
+  return true;
+}
+
+function initValidation( input ) {
+  
+  input.classList.contains( 'success' ) ? input.classList.remove( 'success' ) : null;
+}
+
+//  ##  Name Validation
+
+const signup_name          = document.getElementById( 'signup_nome' );
+const signup_name_feedback = document.getElementById( 'signup_nome_feedback' );
+
+function validateName( input, feedback ) {
+
+  const value = input.value;
+
+  initValidation( input );
+
+  if( Validator.isEmpty( value ) ) {
+    input.classList.add( 'error' );
+    feedback.innerText = 'Precisamos do seu nome';
+
+    return false;
+  }
+
+  return validated( input, feedback );
+}
+
+try {
+  signup_name.addEventListener( 'focusout', () => validateName( signup_name, signup_name_feedback ) );
+} catch( err ) {}
+
 //  ##  Email Validation
 
 const email                 = document.getElementById( 'email' );
@@ -10,6 +51,8 @@ const signup_email_feedback = document.getElementById( 'signup_email_feedback' )
 function validateEmail( input, feedback ) {
 
   const value = input.value;
+
+  initValidation( input );
 
   if( Validator.isEmpty( value ) ) {
     input.classList.add( 'error' );
@@ -23,11 +66,7 @@ function validateEmail( input, feedback ) {
     return false;
   }
 
-  input.classList.remove( 'error' );
-  input.classList.add( 'success' );
-  feedback.innerText = '';
-
-  return true;
+  return validated( input, feedback );
 }
 
 try {
@@ -48,6 +87,8 @@ function validatePassword( input, feedback ) {
 
   const value = input.value;
 
+  initValidation( input );
+
   if( Validator.isEmpty( value ) ) {
     input.classList.add( 'error' );
     feedback.innerText = 'Por favor insira uma senha';
@@ -55,18 +96,33 @@ function validatePassword( input, feedback ) {
     return false;
   }
 
-  input.classList.remove( 'error' );
-  input.classList.add( 'success' );
-  feedback.innerText = '';
-
-  return true;
+  return validated( input, feedback );
 }
 
 try {
   password.addEventListener( 'focusout', () => validatePassword( password, password_feedback ) );
 } catch( err ) {}
+
+// Password Length
+
+function validatePasswordLength( input, feedback ) {
+
+  const value = input.value;
+
+  initValidation( input );
+
+  if( ! Validator.isLength( value, { min: 6 } ) ) {
+    input.classList.add( 'error' );
+    feedback.innerText = 'A senha deve conter no mínio 6 caracteres';
+
+    return false;
+  }
+
+  return validated( input, feedback );
+}
+
 try {
-  signup_password.addEventListener( 'focusout', () => validatePassword( signup_password, signup_password_feedback ) );
+  signup_password.addEventListener( 'focusout', () => validatePassword( signup_password, signup_password_feedback ) ? validatePasswordLength( signup_password, signup_password_feedback ) : true );
 } catch( err ) {}
 
 //  ##  Form Validation
@@ -76,7 +132,7 @@ function validateLogin() {
 }
 
 function validateSignup() {
-  return validateEmail( signup_email, signup_email_feedback ) && validatePassword( signup_password, signup_password_feedback );
+  return validateName( signup_name, signup_name_feedback ) && validateEmail( signup_email, signup_email_feedback ) && validatePassword( signup_password, signup_password_feedback ) && validatePasswordLength( signup_password, signup_password_feedback );
 }
 
 //  ##  Export
