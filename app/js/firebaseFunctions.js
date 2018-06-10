@@ -1,13 +1,7 @@
 require('sweetalert');
 var firebase = require('firebase')
-var config = {
-    apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
-    authDomain: "openpgp-chat.firebaseapp.com",
-    databaseURL: "https://openpgp-chat.firebaseio.com",
-    projectId: "openpgp-chat",
-    storageBucket: "openpgp-chat.appspot.com",
-    messagingSenderId: "314141157485"
-};
+var openpgp = require('/Users/Mateus/Desktop/openpgp-chat/app/js/cryptografa')
+
 
 function validaSignup() {
 
@@ -22,8 +16,16 @@ function validaSignup() {
     signup_form.classList.add( 'loading' );
 
     firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
-        salvaUsu(nome.value, email.value, res.uid);
-        addContato(res.uid);
+        openpgp.geraChave(nome.value,email.value);
+        setTimeout(() => {
+            let priv = openpgp.getChavePrivada();
+            let public = openpgp.getChavePublica();
+            salvaUsu(nome.value, email.value, res.uid, priv, public);
+            addContato(res.uid);
+            nome.value  = '';
+            email.value = '';
+            senha.value = '';
+        }, 3000);
         // addContato(res.user.uid);
         const login_screen          = document.getElementById('login_screen');
         const login_panel           = document.getElementById( 'login_panel' );
@@ -34,9 +36,7 @@ function validaSignup() {
 
         signup_form.classList.remove( 'loading' );
 
-        nome.value  = '';
-        email.value = '';
-        senha.value = '';
+        
         nome.classList.remove( 'success' );
         email.classList.remove( 'success' );
         senha.classList.remove( 'success' );
@@ -90,15 +90,17 @@ function validaLogin() {
         });
     }
 }
-function salvaUsu(nome, email, uid) {
+function salvaUsu(nome, email, uid, priv, public) {
     var usuRef = this.database.ref('usuarios/' + uid + '/informacoes');
     usuRef.push({
         name: nome,
         email: email,
         id: uid,
-        //chave pública
+        chavePublica:public,
+        chavePrivada:priv
     });
 }
+
 
 function logOut() {
     firebase.auth().signOut();
