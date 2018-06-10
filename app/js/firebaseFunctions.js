@@ -17,9 +17,9 @@ const database = firebase.database();
 
 const loginCounter = new helpers.Counter( {
     max: 3,
-    timeout: 60,
+    timeout: 10,
     message: 'Máximo de tentativas atingido. Tente novamente em {result} segundos',
-    elem: document.getElementById( 'counter_value' )
+    elem: document.getElementById( 'login_error' )
 } );
 
 function validaSignup() {
@@ -89,6 +89,8 @@ function validaLogin() {
     const login_error           = document.getElementById( 'login_error' );
           login_error.innerText = '';
 
+          console.log( loginCounter );
+
     if ( validation.validateLogin() && loginCounter.isWaiting() ) {
 
         const login_form = document.getElementById('login_form');
@@ -104,8 +106,8 @@ function validaLogin() {
                 senha.value           = '';
                 email.classList.remove( 'success' );
                 senha.classList.remove( 'success' );
-                email.classList.add( 'error' );
-                senha.classList.add( 'error' );
+                document.querySelector( 'label[for="senha"]' ).classList.remove( 'active' );
+                email.focus();
                 loginCounter.count();
             }
         });

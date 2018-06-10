@@ -1,40 +1,47 @@
-function Counter( config ) {
-  this._attemps  = 0;
-  this._timeLeft = 0;
-  this._interval = null;
-  this._waiting  = true;
+class Counter {
 
-  this._throw = () => {
-      
-      if( this._timeLeft == 0 ) {
-          this._timeLeft = config.timeout;
-          this._countdown();
-          this._interval = setInterval( this._countdown, 1000 );
-      }
-
-      this._waiting = false;
-      return this._waiting;
-  };
-
-  this._countdown = () => {
-      this._timeLeft == 0 ? this._clear() : config.elem.innerText = config.message.replace( '{result}', this._timeLeft-- );
-  };
-
-  this._clear = () => {
-      clearInterval( this._interval );
-      this._waiting         = true;
-      this._timeLeft        = 0;
-      this._attemps         = 0;
-      config.elem.innerText = '';
+  constructor( config ) {
+    this._max      = config.max;
+    this._timeout  = config.timeout;
+    this._message  = config.message;
+    this._elem     = config.elem;
+    this._attemps  = 0;
+    this._timeLeft = 0;
+    this._interval = null;
+    this._waiting  = true;
   }
 
-  this.isWaiting = () => {
+  _throw() {
+      
+    if( this._timeLeft == 0 ) {
+      this._timeLeft = this._timeout;
+      this._countdown();
+      this._interval = setInterval( () => this._countdown(), 1000 );
+    }
+
+    this._waiting = false;
     return this._waiting;
   }
 
-  this.count = () => {
-    return ++this._attemps == config.max ? this._throw() : null;
-  };
+  _countdown() {
+    this._timeLeft == 0 ? this._clear() : this._elem.innerText = this._message.replace( '{result}', this._timeLeft-- );
+  }
+
+  _clear() {
+    clearInterval( this._interval );
+    this._waiting               = true;
+    this._timeLeft              = 0;
+    this._attemps               = 0;
+    this._elem.innerText = '';
+  }
+
+  isWaiting() {
+    return this._waiting;
+  }
+
+  count() {
+    ++this._attemps == this._max ? this._throw() : null;
+  }
 }
 
 module.exports = {
