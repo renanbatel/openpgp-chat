@@ -7,8 +7,6 @@ const login_panel   = document.getElementById( 'login_panel' );
 const signup_panel  = document.getElementById( 'signup_panel' );
 const panel_wrapper = document.getElementById( 'panel_wrapper' );
 
-
-
 function openSignUpPanel( event ) {
   event.preventDefault();
   login_screen.classList.add( 'signup-panel-opened' );

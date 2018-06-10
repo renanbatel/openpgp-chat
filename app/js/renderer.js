@@ -1,12 +1,8 @@
 require('firebase');
-const validation = require('./js/validation.js');
 require('sweetalert');
 require('./js/view/login');
-const { ipcRenderer } = require('electron');
+const { ipcRenderer }  = require('electron');
 const firebaseFunction = require('./js/firebaseFunctions.js');
-
-firebase.initializeApp(config);
-var database = firebase.database();
 
 var btnCadastrar = document.getElementById('cadastrar');
 var btnLogin = document.getElementById('login');
@@ -18,7 +14,7 @@ btnCadastrar.addEventListener('click', function (event) {
 });
 
 btnLogin.addEventListener('click', function (event) {
-    event.preventDefault()
+    event.preventDefault();
     firebaseFunction.validaLogin();
 });
 

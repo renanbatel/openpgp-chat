@@ -1,5 +1,7 @@
 require('sweetalert');
-var firebase = require('firebase')
+const validation = require('./validation');
+const helpers = require( './helpers' );
+var firebase = require('firebase');
 var config = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
     authDomain: "openpgp-chat.firebaseapp.com",
@@ -9,13 +11,23 @@ var config = {
     messagingSenderId: "314141157485"
 };
 
+firebase.initializeApp(config);
+var database = firebase.database();
+
+const loginCounter = new helpers.Counter( {
+    max: 3,
+    timeout: 60,
+    message: 'Máximo de tentativas atingido. Tente novamente em {result} segundos',
+    elem: document.getElementById( 'counter_value' )
+} );
+
 function validaSignup() {
 
     var email = document.getElementById('signup_email');
     var senha = document.getElementById('signup_senha');
     var nome = document.getElementById('signup_nome');
 
-    if (validation.validateSignup()) {
+    if ( validation.validateSignup() ) {
 
     const signup_form = document.getElementById( 'signup_form' );
 
@@ -70,7 +82,7 @@ function validaLogin() {
     const login_error           = document.getElementById( 'login_error' );
           login_error.innerText = '';
 
-    if ( validation.validateLogin() ) {
+    if ( validation.validateLogin() && loginCounter.isWaiting() ) {
 
         const login_form = document.getElementById('login_form');
 
@@ -82,16 +94,18 @@ function validaLogin() {
             if (error != null) {
                 login_form.classList.remove('loading');
                 login_error.innerText = 'Email ou senha invalídos';
+                senha.value           = '';
                 email.classList.remove( 'success' );
                 senha.classList.remove( 'success' );
                 email.classList.add( 'error' );
                 senha.classList.add( 'error' );
+                loginCounter.count();
             }
         });
     }
 }
 function salvaUsu(nome, email, uid) {
-    var usuRef = this.database.ref('usuarios/' + uid + '/informacoes');
+    var usuRef = database.ref('usuarios/' + uid + '/informacoes');
     usuRef.push({
         name: nome,
         email: email,
@@ -109,7 +123,7 @@ function addContato(uid) {
     getAllUsuarios(uid, (usuarios) => {
 
         var info = usuarios.map(r => r.informacoes);
-        var usuRef = this.database.ref('usuarios/' + uid + '/contatos');
+        var usuRef = database.ref('usuarios/' + uid + '/contatos');
 
         info.forEach(i => {
             var obj = i[Object.keys(i)[0]];
@@ -125,7 +139,7 @@ function addContato(uid) {
 }
 
 function getAllUsuarios(uid, callback) {
-    var usuarios = this.database.ref('usuarios');
+    var usuarios = database.ref('usuarios');
     var usuInfo = [];
     usuarios.once('value', function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
@@ -151,7 +165,7 @@ function enviarMensagem(ChavePUDestinatario) {
     var user = firebase.auth().currentUser;
     if (user) {
         var mens = 'ea man, e o parmera ein? kkkk';
-        var mensagem = this.database.ref('mensagens/');
+        var mensagem = database.ref('mensagens/');
         mensagem.push({ uidEmitente: user.uid, uidDestinatario: ChavePUDestinatario, mensagem: mens });
     }else{
         console.log('USUARIO NÃO LOGADO')
