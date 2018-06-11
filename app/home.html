@@ -5,9 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenPGP Chat</title>
-    <link rel="stylesheet" href="../node_modules/materialize-css/dist/css/materialize.min.css">
+    <link rel="stylesheet" href="../node_modules/material-icons/iconfont/material-icons.css">
     <link rel="stylesheet" href="main.css">
-    <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
 </head>
 
 <body>
@@ -15,14 +14,110 @@
         <div class="app-wrapper">
             <main id="main">
                 <!-- MAIN -->
-                <ul id="contatos-list"></ul>
-                <script id="contatos-template" type="text/x-handlebars-template">
-                    {{#each contatos}}
-                    <li>
-                        {{nome}}
-                    </li>
-                    {{/each}}
-                  </script>
+                
+                    <div class="home-screen">
+                        <div class="row">
+                            <div class="col s4 home-sidebar column-content">
+                                <header class="home-screen_header">
+                                    <div class="row-content aligned spaced">
+                                        <div class="home-sidebar_user column-content">
+                                            <strong>Usuário</strong>
+                                            <span>Alguma coisa</span>
+                                        </div>
+                                        <div class="home-sidebar_options">
+                                            <div class="row-content aligned">
+                                                <button class="waves-effect waves-light btn-flat btn-icon">
+                                                    <i class="material-icons">more_vert</i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="home-sidebar_search">
+                                        <div class="input-field row-content aligned">
+                                            <i class="material-icons">search</i>
+                                            <input type="text" name="search" id="search" placeholder="Procurar">
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="home-sidebar_content column-content">
+                                    <ul class="home-sidebar_list">
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                        <li class="home-sidebar_list-item">
+                                            <div class="row-content spaced">
+                                                <strong>Contato</strong>
+                                                <span>25 dez 2017</span>
+                                            </div>
+                                            <p>Última mensagem enviada pelo arrombado...</p>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col s8 home-main"></div>
+                        </div>
+                    </div>
+
                 <!-- MAIN -->
             </main>
         </div>
@@ -31,7 +126,6 @@
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/hammerjs/hammer.min.js"></script>
     <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
-    <script src="js/renderer.js"></script>
     <script src="js/view/home.js"></script>
 </body>
 

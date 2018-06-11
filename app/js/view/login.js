@@ -1,4 +1,28 @@
-const ResizeSensor  = require( 'css-element-queries/src/ResizeSensor' );
+const ResizeSensor     = require( 'css-element-queries/src/ResizeSensor' );
+const firebaseFunction = require('./js/firebaseFunctions.js');
+
+//  ##  Button Events
+
+const btnCadastrar = document.getElementById('cadastrar');
+const btnLogin     = document.getElementById('login');
+// const btnLogout    = document.getElementById('logo-out');
+
+btnCadastrar.addEventListener( 'click' , ( event ) => {
+    event.preventDefault();
+    firebaseFunction.validaSignup();
+} );
+
+btnLogin.addEventListener( 'click' , ( event ) => {
+    event.preventDefault();
+    firebaseFunction.validaLogin();
+} );
+
+// btnLogout.addEventListener( 'click' , ( event ) => {
+//     event.preventDefault()
+//     firebaseFunction.logOut();
+// } );
+
+//  ##  Panel Control
 
 const open_signup   = document.getElementById( 'open_signup' );
 const close_signup  = document.getElementById( 'close_signup' );
