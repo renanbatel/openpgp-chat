@@ -1,5 +1,5 @@
 require('./js/view/login');
-const { ipcRenderer }  = require('electron');
+const { ipcRenderer } = require('electron');
 const firebaseFunction = require('./js/firebaseFunctions.js');
 
 var btnCadastrar = document.getElementById('cadastrar');

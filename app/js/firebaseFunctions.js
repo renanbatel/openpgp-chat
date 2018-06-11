@@ -1,9 +1,9 @@
 require('sweetalert');
 const validation = require('./validation');
-const helpers    = require( './helpers' );
-const openpgp    = require( './cryptografa' );
-const firebase   = require('firebase');
-const config     = {
+const helpers = require('./helpers');
+const openpgp = require('./cryptografa');
+const firebase = require('firebase');
+const config = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
     authDomain: "openpgp-chat.firebaseapp.com",
     databaseURL: "https://openpgp-chat.firebaseio.com",
@@ -15,12 +15,12 @@ const config     = {
 firebase.initializeApp(config);
 const database = firebase.database();
 
-const loginCounter = new helpers.Counter( {
+const loginCounter = new helpers.Counter({
     max: 3,
     timeout: 60,
     message: 'Máximo de tentativas atingido. Tente novamente em {result} segundos',
-    elem: document.getElementById( 'counter_value' )
-} );
+    elem: document.getElementById('counter_value')
+});
 
 function validaSignup() {
 
@@ -28,37 +28,34 @@ function validaSignup() {
     var senha = document.getElementById('signup_senha');
     var nome = document.getElementById('signup_nome');
 
-    if ( validation.validateSignup() ) {
+    if (validation.validateSignup()) {
 
-    const signup_form = document.getElementById( 'signup_form' );
+        const signup_form = document.getElementById('signup_form');
 
-    signup_form.classList.add( 'loading' );
+        signup_form.classList.add('loading');
 
-    firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
-        openpgp.geraChave(nome.value,email.value);
-        setTimeout(() => {
-            let priv = openpgp.getChavePrivada();
-            let public = openpgp.getChavePublica();
-            salvaUsu(nome.value, email.value, res.uid, priv, public);
-            addContato(res.uid);
-            nome.value  = '';
-            email.value = '';
-            senha.value = '';
-        }, 3000);
-        // addContato(res.user.uid);
+        firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
+            openpgp.geraChave(nome.value, email.value);
+            setTimeout(() => {
+                let priv = openpgp.getChavePrivada();
+                let public = openpgp.getChavePublica();
+                salvaUsu(nome.value, email.value, res.uid, priv, public);
+                nome.value = '';
+                email.value = '';
+                senha.value = '';
+            }, 3000);
             const login_screen = document.getElementById('login_screen');
-        const login_panel           = document.getElementById( 'login_panel' );
-        const panel_wrapper         = document.getElementById( 'panel_wrapper' );
+            const login_panel = document.getElementById('login_panel');
+            const panel_wrapper = document.getElementById('panel_wrapper');
             const private_key = document.createElement('span');
             private_key.className = 'private-key-modal';
             private_key.innerText = '{{chave privada}}';
 
-        signup_form.classList.remove( 'loading' );
+            signup_form.classList.remove('loading');
 
-        
-        nome.classList.remove( 'success' );
-        email.classList.remove( 'success' );
-        senha.classList.remove( 'success' );
+            nome.classList.remove('success');
+            email.classList.remove('success');
+            senha.classList.remove('success');
 
             swal({
                 title: 'Usuário criado com sucesso!',
@@ -70,7 +67,7 @@ function validaSignup() {
                 .then((value) => {
                     setTimeout(() => {
                         login_screen.classList.remove('signup-panel-opened');
-                    panel_wrapper.style.height = `${ login_panel.offsetHeight }px`;
+                        panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
                     }, 200);
                 });
         }).catch(function (error) {
@@ -79,17 +76,18 @@ function validaSignup() {
                 return;
             }
         });
-}}
+    }
+}
 
 function validaLogin() {
 
     var email = document.getElementById('email');
     var senha = document.getElementById('senha');
 
-    const login_error           = document.getElementById( 'login_error' );
-          login_error.innerText = '';
+    const login_error = document.getElementById('login_error');
+    login_error.innerText = '';
 
-    if ( validation.validateLogin() && loginCounter.isWaiting() ) {
+    if (validation.validateLogin() && loginCounter.isWaiting()) {
 
         const login_form = document.getElementById('login_form');
 
@@ -99,18 +97,19 @@ function validaLogin() {
             ipcRenderer.send('abrir-home');
         }).catch(function (error) {
             if (error != null) {
-            login_form.classList.remove('loading');
+                login_form.classList.remove('loading');
                 login_error.innerText = 'Email ou senha invalídos';
-                senha.value           = '';
-                email.classList.remove( 'success' );
-                senha.classList.remove( 'success' );
-                email.classList.add( 'error' );
-                senha.classList.add( 'error' );
+                senha.value = '';
+                email.classList.remove('success');
+                senha.classList.remove('success');
+                email.classList.add('error');
+                senha.classList.add('error');
                 loginCounter.count();
             }
         });
     }
 }
+
 function salvaUsu(nome, email, uid, priv, public) {
     var usuRef = database.ref('usuarios/' + uid + '/informacoes');
     if (usuRef) {
@@ -118,23 +117,20 @@ function salvaUsu(nome, email, uid, priv, public) {
             name: nome,
             email: email,
             id: uid,
-            chavePublica:public,
-            getChavePrivada:priv
+            chavePublica: public,
+            getChavePrivada: priv
         });
     } else {
         console.log('ERRO ao referenciar usuario/informacao no bd salva usuario')
     }
 }
 
-
 function logOut() {
     firebase.auth().signOut();
 }
-function addContato(uid) {
 
-    var email = "romero@gmail.com"; //aqui será o email pra add o contato
+function addContato(uid, email) {
     getAllUsuarios(uid, (usuarios) => {
-
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
         if (usuRef) {
@@ -146,7 +142,7 @@ function addContato(uid) {
                     });
                 }
                 else
-                    console.log('CONTATO NÃO EXISTE FILHA DA PUTA');
+                    console.log('CONTATO NÃO EXISTE');
             });
         } else {
             console.log('ERRO ao referenciar usuario/informacao no bd add contato')
@@ -165,32 +161,26 @@ function getAllUsuarios(uid, callback) {
     });
 }
 
-function carregaMensagem() {
+function carregaMensagem(OutroUser) {
     var user = firebase.auth().currentUser;
     var mensagem = database.ref('mensagens/');
     mensagem.off();
-    //verificar os usuários da conversa para assim filtrar
-    //aqui será quando abrir a conversar
     var setMensagem = function (data) {
+        if(data.uidEmitente == user.uid && data.uidDestinatario == OutroUser)
         console.log(data.val())
     }
-
     if (user) {
-        mensagem.on('child_added', setMensagem);
-        mensagem.on('child_changed', setMensagem);
+        mensagem.limitToLast(10).on('child_added', setMensagem); //lê as ultimas 10 mensagens
+        mensagem.limitToLast(10).on('child_changed', setMensagem);//lê as ultimas 10 mensagens
     }
 }
 
-function recebeMensagem() {
-    //TO DO
-}
-
-function enviarMensagem(ChavePUDestinatario) {
+function enviarMensagem(uidDestinatario) {
     var user = firebase.auth().currentUser;
     if (user) {
-        var mens = '7';
+        var mens = '1';
         var mensagem = database.ref('mensagens/');
-        mensagem.push({ uidEmitente: user.uid, uidDestinatario: ChavePUDestinatario, mensagem: mens });
+        mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: mens });
     } else {
         console.log('USUARIO NÃO LOGADO')
     }
