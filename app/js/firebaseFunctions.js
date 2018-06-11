@@ -1,9 +1,10 @@
 require('sweetalert');
-const validation = require('./validation');
-const helpers    = require( './helpers' );
-const openpgp    = require( './cryptografa' );
-const firebase   = require('firebase');
-const config     = {
+const validation    = require('./validation');
+const helpers       = require( './helpers' );
+const openpgp       = require( './cryptografa' );
+const firebase      = require('firebase');
+const {ipcRenderer} = require( 'electron' );
+const config        = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
     authDomain: "openpgp-chat.firebaseapp.com",
     databaseURL: "https://openpgp-chat.firebaseio.com",
@@ -17,7 +18,7 @@ const database = firebase.database();
 
 const loginCounter = new helpers.Counter( {
     max: 3,
-    timeout: 10,
+    timeout: 60,
     message: 'Máximo de tentativas atingido. Tente novamente em {result} segundos',
     elem: document.getElementById( 'login_error' )
 } );

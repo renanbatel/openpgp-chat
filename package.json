@@ -33,6 +33,7 @@
     "firebase": "^4.13.1",
     "firebase-tools": "^3.18.4",
     "handlebars": "^4.0.11",
+    "material-icons": "^0.2.3",
     "materialize-css": "^0.100.2",
     "openpgp": "^3.0.11",
     "requirejs": "^2.3.5",
