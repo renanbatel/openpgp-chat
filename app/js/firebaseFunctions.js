@@ -88,8 +88,6 @@ function validaLogin() {
     const login_error = document.getElementById('login_error');
     login_error.innerText = '';
 
-          console.log( loginCounter );
-
     if (validation.validateLogin() && loginCounter.isWaiting()) {
 
         const login_form = document.getElementById('login_form');
