@@ -5,7 +5,6 @@ const firebaseFunction = require('./js/firebaseFunctions.js');
 
 const btnCadastrar = document.getElementById('cadastrar');
 const btnLogin     = document.getElementById('login');
-// const btnLogout    = document.getElementById('logo-out');
 
 btnCadastrar.addEventListener( 'click' , ( event ) => {
     event.preventDefault();
