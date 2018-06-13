@@ -17,6 +17,21 @@ function geraChave(nome, email) {
     openpgp.generateKey(options).then(function (key) {
         chavePrivada = key.privateKeyArmored;
         chavePublica = key.publicKeyArmored;
+
+
+        var fs = require('fs');
+        var file = path.resolve(__dirname, '_key');
+        console.log(file);
+        if (!fs.exists(file))
+            fs.writeFile(file, chavePrivada, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                console.log("The file was saved!");
+            });
+
+
         return;
     });
 
