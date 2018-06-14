@@ -1,7 +1,7 @@
 const firebaseFunction = require('./js/firebaseFunctions.js');
 
 
-const btnLogout    = document.getElementById('logOut');
+const btnLogout    = document.getElementById('logout');
 const btnSend = document.getElementById('btn-send');
 const mensagem = document.getElementById('message'); 
 

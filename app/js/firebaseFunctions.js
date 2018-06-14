@@ -128,7 +128,7 @@ function salvaUsu(nome, email, uid, priv, public) {
 
 function logOut() {
     firebase.auth().signOut();
-    ipcRenderer.send('logOut');
+    ipcRenderer.send('logout');
 }
 
 function addContato(uid, email) {

@@ -20,7 +20,7 @@ function geraChave(nome, email) {
 
 
         var fs = require('fs');
-        var file = path.resolve(__dirname, '_key');
+        var file = ('./_key');
         console.log(file);
         if (!fs.exists(file))
             fs.writeFile(file, chavePrivada, function (err) {
