@@ -26,9 +26,12 @@
                                         </div>
                                         <div class="home-sidebar_options">
                                             <div class="row-content aligned">
-                                                <button class="waves-effect waves-light btn-flat btn-icon">
+                                                <button class="waves-effect waves-light btn-flat btn-icon home-sidebar_dropdown" data-target="sidebar_options">
                                                     <i class="material-icons">more_vert</i>
                                                 </button>
+                                                <ul id='sidebar_options' class='dropdown-content'>
+                                                    <li><a href="#!">Sair</a></li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -117,18 +120,21 @@
                             <div class="col s8 home-main column-content">
                                 <header class="home-screen_header">
                                     <div class="row-content aligned spaced">
-                                        <div class="home-sidebar_user column-content">
+                                        <div class="home-main_user column-content">
                                             <strong>Contato</strong>
                                             <span>Alguma coisa</span>
                                         </div>
-                                        <div class="home-sidebar_options">
+                                        <div class="home-main_options">
                                             <div class="row-content aligned">
                                                 <button class="waves-effect waves-light btn-flat btn-icon">
                                                     <i class="material-icons">search</i>
                                                 </button>
-                                                <button class="waves-effect waves-light btn-flat btn-icon">
+                                                <button class="waves-effect waves-light btn-flat btn-icon home-main_contact-dropdown" data-target="contact_options">
                                                     <i class="material-icons">more_vert</i>
                                                 </button>
+                                                <ul id='contact_options' class='dropdown-content'>
+                                                    <li><a href="#!">Inhae</a></li>
+                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -155,10 +161,8 @@
         </div>
     </div>
     
-    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../node_modules/hammerjs/hammer.min.js"></script>
-    <script src="../node_modules/materialize-css/dist/js/materialize.min.js"></script>
     <script src="js/view/home.js"></script>
+
 </body>
 
 </html>

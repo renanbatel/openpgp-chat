@@ -10,6 +10,18 @@
   .row-content {
     padding: 8px 14px;
   }
+  .dropdown-content {
+    background-color: lighten( map-get( $color, grey ), 6% );
+
+    a {
+      transition: background-color .33s;
+      color: map-get( $color, dark );
+
+      &:hover {
+        background-color: map-get( $color, grey );
+      }
+    }
+  }
 }
 
 .home-sidebar {
@@ -80,6 +92,13 @@
 
   .home-screen_header {
     border-bottom: 1px solid darken( map-get( $color, grey ), 4% );
+  }
+}
+
+.home-main_options {
+
+  .row-content .btn-icon {
+    margin-right: 12px;
   }
 }
 

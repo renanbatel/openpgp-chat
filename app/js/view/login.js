@@ -1,5 +1,6 @@
 const ResizeSensor     = require( 'css-element-queries/src/ResizeSensor' );
 const firebaseFunction = require('./js/firebaseFunctions.js');
+const Materialize      = require( './lib/materialize/js/bin/materialize' );
 
 //  ##  Button Events
 
