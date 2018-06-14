@@ -1,4 +1,22 @@
-// var Handlebars = require('Handlebars');
+const firebaseFunction = require('./js/firebaseFunctions.js');
+
+
+const btnLogout    = document.getElementById('logOut');
+const btnSend = document.getElementById('btn-send');
+const mensagem = document.getElementById('message'); 
+
+
+btnSend.addEventListener('click', (event)=>{
+    event.preventDefault();
+    let msg = mensagem.value;
+    console.log(msg);
+    firebaseFunction.enviarMensagem("ryY1g0TauBSSEIUMI4T0uEC8tQF3",msg);
+} );
+btnLogout.addEventListener('click', (event)=>{
+    event.preventDefault();
+    firebaseFunction.logOut();
+})
+
 // var template = $("#contatos-template").html();
 // var compiledTemplate = Handlebars.compile(template);
 // var fbase = require('./js/firebaseFunctions');

@@ -1,5 +1,6 @@
 'use strict'
 require( 'electron-reload' )( __dirname );
+var fs = require('fs');
 const {ipcMain} = require( 'electron' );
 
 const electron    = require( 'electron' );
@@ -32,6 +33,8 @@ app.on('ready', () => {
   } );
   mainWindow.setMenuBarVisibility( false );
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+
   // mainWindow.loadURL( url.format( {
   //   pathname: path.join( __dirname, 'index.html' ),
   //   protocol: 'file',
@@ -43,6 +46,8 @@ app.on('window-all-closed', () =>{
   app.quit();
 })
 ipcMain.on('abrir-home', () =>{
-
   mainWindow.loadURL(`file://${__dirname}/home.html`);
+})
+ipcMain.on('logout', ()=>{
+  mainWindow.loadURL(`file://${__dirname}/index.html`)
 })

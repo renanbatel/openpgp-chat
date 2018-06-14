@@ -1,5 +1,9 @@
 {{#each contatos}}
-<li>
-    {{nome}}
+<li class="home-sidebar_list-item">
+    <div data-uid="{{uid}}" data-pubKey="{{chavePublica}}" class="row-content spaced">
+        <strong>{{nome}}</strong>
+        <span>25 dez 2017</span>
+    </div>
+    <p>Última mensagem enviada pelo arrombado...</p>
 </li>
 {{/each}}

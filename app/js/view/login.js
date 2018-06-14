@@ -6,7 +6,6 @@ const Materialize      = require( './lib/materialize/js/bin/materialize' );
 
 const btnCadastrar = document.getElementById('cadastrar');
 const btnLogin     = document.getElementById('login');
-// const btnLogout    = document.getElementById('logo-out');
 
 btnCadastrar.addEventListener( 'click' , ( event ) => {
     event.preventDefault();
