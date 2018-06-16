@@ -20,7 +20,9 @@
   "scripts": {
     "start": "npx electron app/main.js",
     "sass": "npx node-sass -r --output-style compressed app/styles/main.scss -o app",
-    "sass:w": "npx node-sass -r -w  --output-style expanded app/styles/main.scss -o app"
+    "sass:w": "npx node-sass -r -w  --output-style expanded app/styles/main.scss -o app",
+    "handlebars": "npx handlebars app/js/view/templates/ -f app/js/view/templates/templates.js",
+    "handlebars:prod": "npx handlebars -m app/js/view/templates/ -f app/js/view/templates/templates.js"
   },
   "devDependencies": {
     "electron": "^1.8.4",

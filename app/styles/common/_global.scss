@@ -31,6 +31,12 @@ main {
   &.spaced {
     justify-content: space-between;
   }
+  &.centralized {
+    justify-content: center;
+  }
+  &.inline {
+    display: inline-flex;
+  }
 }
 
 .column-content {

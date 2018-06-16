@@ -6,16 +6,30 @@ const Materialize      = require( './lib/materialize/js/bin/materialize' );
 
 const btnCadastrar = document.getElementById('cadastrar');
 const btnLogin     = document.getElementById('login');
+const login_screen = document.getElementById( 'login_screen' );
 
 btnCadastrar.addEventListener( 'click' , ( event ) => {
-    event.preventDefault();
-    firebaseFunction.validaSignup();
+  event.preventDefault();
+  firebaseFunction.validaSignup();
 } );
 
 btnLogin.addEventListener( 'click' , ( event ) => {
-    event.preventDefault();
-    firebaseFunction.validaLogin();
+  event.preventDefault();
+  firebaseFunction.validaLogin();
 } );
+
+window.addEventListener( 'keypress', ( event ) => {
+  if( event.key == 'Enter' ) {
+    event.preventDefault();
+
+    if( login_screen.classList.contains( 'signup-panel-opened' ) )
+      firebaseFunction.validaSignup();
+    else
+      firebaseFunction.validaLogin();
+  }
+} );
+
+
 
 // btnLogout.addEventListener( 'click' , ( event ) => {
 //     event.preventDefault()
@@ -26,7 +40,6 @@ btnLogin.addEventListener( 'click' , ( event ) => {
 
 const open_signup   = document.getElementById( 'open_signup' );
 const close_signup  = document.getElementById( 'close_signup' );
-const login_screen  = document.getElementById( 'login_screen' );
 const login_panel   = document.getElementById( 'login_panel' );
 const signup_panel  = document.getElementById( 'signup_panel' );
 const panel_wrapper = document.getElementById( 'panel_wrapper' );

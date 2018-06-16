@@ -1,5 +1,7 @@
 const firebaseFunction = require('./js/firebaseFunctions.js');
-
+const Materialize      = require( './lib/materialize/js/bin/materialize' );
+const Handlebars       = require( 'handlebars/runtime' );
+const templates        = require( './js/view/templates/templates.js' );
 
 const btnLogout    = document.getElementById('logout');
 const btnSend = document.getElementById('btn-send');
@@ -17,27 +19,89 @@ btnLogout.addEventListener('click', (event)=>{
     firebaseFunction.logOut();
 })
 
-// var template = $("#contatos-template").html();
-// var compiledTemplate = Handlebars.compile(template);
-// var fbase = require('./js/firebaseFunctions');
-// var usuario = {
-//     "nome" : "gerso",
-//     "chavePrivada": '123456',
-//     "contatos":[{
-//                 "nome":"maria",
-//                 "chavePrivada": 'abc123'
-//             },{
-//                 "nome":"seu zé",
-//                 "chavePrivada":'456abc'
-//             },{
-//                 "nome" : "samara",
-//                 "chavePrivada": "chobate"
-//             }]
-// }
-//     console.log('logou certo');
-//     $('#contatos-list').html(compiledTemplate(usuario));
+//  ##  Messages
 
-const Materialize = require( './lib/materialize/js/bin/materialize' );
+function loadMessagesTemplate( user ) {
+  let messages = new Array();
+
+  if( user.uid ) {
+    messages = [
+      {
+        message: 'Eae man, suave?',
+        date: '12:00',
+      }, {
+        message: 'Suave man, e ae?',
+        date: '12:02',
+        from: 'contact'
+      }, {
+        message: 'Spicy jalapeno bacon ipsum dolor amet bresaola fatback picanha meatloaf. Venison ham turducken, pork biltong brisket beef ribs',
+        date: '12:05',
+      }, {
+        message: 'Tri-tip pancetta ham hock jowl capicola meatball. Kielbasa swine pig, pastrami pork loin ball tip shoulder pork chop',
+        date: '12:08',
+        from: 'contact'
+      }
+    ];
+  }
+
+  const source           = document.getElementById( 'messages' );
+  const template         = Handlebars.templates[ 'message' ]( messages );
+        source.innerHTML = template;
+}
+
+function loadMessages( user ) {
+  loadMessagesTemplate( user );
+}
+
+//  ##  Contacts
+
+function changeContactView() {
+
+  try {
+    document.querySelector( '.home-sidebar_contact.active' ).classList.remove( 'active' );
+  } catch( err ) {}
+  
+  this.classList.add( 'active' );
+
+  const user = {
+    uid: this.dataset.uid
+  }
+
+  loadMessages( user );
+}
+
+function loadContacsTemplate() {
+  const contacts = [
+    {
+      name: 'Contato',
+      date: 'Data',
+      message: 'Tri-tip pancetta ham hock jowl capicola meatball...',
+      uid: 'uid'
+    }, {
+      name: 'Contato',
+      date: 'Data',
+      message: 'Tri-tip pancetta ham hock jowl capicola meatball...'
+    }, {
+      name: 'Contato',
+      date: 'Data',
+      message: 'Tri-tip pancetta ham hock jowl capicola meatball...'
+    }
+  ];
+  const source           = document.getElementById( 'contacts' );
+  const template         = Handlebars.templates[ 'contact' ]( contacts );
+        source.innerHTML = template;
+}
+
+function loadContacsEvents() {
+  const contacts = document.querySelectorAll( '.home-sidebar_contact' );
+
+  contacts.forEach( ( contact ) => contact.addEventListener( 'click', changeContactView ) );
+}
+
+function loadContacs() {
+  loadContacsTemplate();
+  loadContacsEvents();
+}
 
 function buildMaterializeDropdown( params ) {
 
@@ -70,9 +134,9 @@ function loadMaterializeComponents() {
       coverTrigger: false
     }
   } );
-
 }
 
 document.addEventListener( 'DOMContentLoaded', () => {
+  loadContacs();
   loadMaterializeComponents();
 } );

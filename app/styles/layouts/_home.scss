@@ -24,6 +24,8 @@
   }
 }
 
+//  ##  Home Sidebar
+
 .home-sidebar {
   height: 100vh;
   background-color: map-get( $color, light );
@@ -83,6 +85,9 @@
   &:hover {
     background-color: lighten( map-get( $color, grey ), 6% );
   }
+  &.active {
+    background-color: map-get( $color, grey );
+  }
 }
 
 //  ##  Home Main
@@ -105,6 +110,72 @@
 .home-main_messages {
   flex: 1;
   background-color: map-get( $color, primary );
+}
+
+.home-main_message-placeholder {
+  height: 100%;
+  h1 {
+    color: map-get( $color, light );
+  }
+}
+
+.home-main_messages-list {
+  height: 100%;
+  padding: 32px 26px;
+  margin: 0;
+  list-style: none;
+}
+
+.home-main_message-row {
+  margin-bottom: 12px;
+  &.user {
+    justify-content: flex-end;
+
+    .home-main_message {
+      background-color: lighten( map-get( $color, primary ), 66% );
+    }
+  }
+  &.contact {
+    justify-content: flex-start;
+
+    .home-main_message {
+      background-color: darken( map-get( $color, light ), 2% );
+    }
+  }
+}
+
+.home-main_message-empty {
+  position: relative;
+  text-align: center;
+  color: map-get( $color, light );
+
+  &::before {
+    position: absolute;
+    top: calc( 100% + 5px );
+    left: 50%;
+    width: 60px;
+    height: 1px;
+    margin-left: -30px;
+    background-color: map-get( $color, light );
+    content: '';
+  }
+}
+
+.home-main_message {
+  max-width: 60%;
+  border-radius: 5px;
+  align-items: flex-end;
+  padding: 10px 16px 6px 16px;
+  box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.16);
+
+  p {
+    margin: 0 0 10px 0;
+  }
+  .time {
+    padding-left: 8px;
+    font-size: 0.8rem;
+    color: #777;
+  }
 }
 
 .home-main_footer {
