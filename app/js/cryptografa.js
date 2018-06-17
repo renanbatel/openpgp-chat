@@ -47,7 +47,7 @@ function getCifrada() {
 function salvaChave(){
         let path = dialog.showOpenDialog({properties:['openDirectory']});
         var fs = require('fs');
-        var file = (path + '/_key');
+        var file = (path + '/_key.priv');
         if(path == null){
             console.log('false');
             return false;
@@ -65,7 +65,7 @@ function salvaChave(){
 
 }
 function leChave(){
-    let path = dialog.showOpenDialog({properties:['openFile']})
+    let path = dialog.showOpenDialog({properties:['openFile'], filters:[{name: 'priv Files', extensions:['priv']}]})
 
         var fs = require('fs');
         if(path == null){
