@@ -48,7 +48,6 @@ function validaSignup() {
                 email.value = '';
                 senha.value = '';
             }, 3000);
-            addContato("1FaYIAxRNZclQMxd0XJqLyWz5rJ2", "renanbatel@gmail.com");
             const login_screen = document.getElementById('login_screen');
             const login_panel = document.getElementById('login_panel');
             const panel_wrapper = document.getElementById('panel_wrapper');
@@ -149,21 +148,29 @@ function logOut() {
     ipcRenderer.send('logout');
 }
 
-function addContato(uid, email) {
-    getAllUsuarios(uid, (usuarios) => {
+function addContato(uid, email, callback) {
+    getAllUsuarios( (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
+        var notFound = true;
         if (usuRef) {
             info.forEach(i => {
                 var obj = i[Object.keys(i)[0]];
                 if (obj.email == email) {
+                    notFound = false;
                     usuRef.push({
-                        nome: 'ze', uid: '1111', chavePublica: '1234'
+                        nome: obj.name, uid: obj.id, chavePublica: obj.chavePublica
                     });
+                    callback();
                 }
-                else
-                    console.log('CONTATO NÃO EXISTE');
             });
+            if( notFound ) {
+                swal( {
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: 'Parece que este email ainda não foi cadastrado'
+                } )
+            }
         } else {
             console.log('ERRO ao referenciar usuario/informacao no bd add contato')
         }
@@ -191,6 +198,7 @@ function getAllContatos(callback) {
             });
             callback( usuContato );
         });
+
     } )
 }
 
@@ -208,15 +216,18 @@ function carregaMensagem(OutroUser) {
     }
 }
 
-function enviarMensagem(uidDestinatario) {
+function enviarMensagem(uidDestinatario, content) {
     var user = firebase.auth().currentUser;
     if (user) {
-        var mens = '1';
         var mensagem = database.ref('mensagens/');
-        mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: mens });
+        mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: content });
     } else {
         console.log('USUARIO NÃO LOGADO')
     }
+}
+
+function getCurrentUser() {
+    return firebase.auth().currentUser;
 }
 
 // Exports
@@ -230,5 +241,6 @@ module.exports = {
     validaSignup,
     carregaMensagem,
     enviarMensagem,
-    getAllContatos
+    getAllContatos,
+    getCurrentUser
 }

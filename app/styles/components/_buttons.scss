@@ -10,4 +10,11 @@
   // &.btn-flat:focus {
   //   background-color: transparent; 
   // }
+  &.btn-flat:disabled {
+    background-color: transparent !important;
+
+    .material-icons {
+      color: #cdcdcd;
+    }
+  }
 }

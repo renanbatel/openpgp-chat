@@ -1,3 +1,7 @@
+#mainHeader, #mainFooter {
+  display: none;
+}
+
 .home-screen {
   > .row > .col {
     padding: 0;
@@ -136,6 +140,10 @@
   .home-screen_header {
     border-bottom: 1px solid darken( map-get( $color, grey ), 4% );
   }
+  footer {
+    flex: 0 0 auto;
+    align-items: flex-end;
+  }
 }
 
 .home-main_options {
@@ -146,7 +154,7 @@
 }
 
 .home-main_messages {
-  flex: 1;
+  flex: 1 1 auto;
   background-color: map-get( $color, primary );
 }
 

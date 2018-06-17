@@ -9,17 +9,50 @@ const helpers           = require( './js/helpers' );
 const btnLogout    = document.getElementById('logout');
 const btnSend = document.getElementById('btn-send');
 const mensagem = document.getElementById('message'); 
+const currentContact = document.getElementById( 'currentContact' );
 
-btnSend.addEventListener('click', (event)=>{
-    event.preventDefault();
-    let msg = mensagem.value;
-    console.log(msg);
-    // firebaseFunctions.enviarMensagem("ryY1g0TauBSSEIUMI4T0uEC8tQF3",msg);
-} );
+let control = false;
+
+function sendMessage() {
+  const content = mensagem.value;
+  firebaseFunctions.enviarMensagem( currentContact.dataset.uid, content );
+}
+
+btnSend.addEventListener('click', sendMessage );
+
 btnLogout.addEventListener('click', (event)=>{
     event.preventDefault();
     firebaseFunctions.logOut();
 })
+
+mensagem.addEventListener( 'keyup' , ( event ) => {
+  if( mensagem.value.length == 0 ) {
+    btnSend.setAttribute( 'disabled', 'true' );
+  } else {
+    btnSend.removeAttribute( 'disabled' );
+  }
+  if( event.key == 'Control' ) {
+    event.preventDefault();
+    control = false;
+  }
+} );
+
+mensagem.addEventListener( 'keydown', ( event ) => {
+  if( ! event.repeat ) {
+    if( event.key === 'Enter' ) {
+      event.preventDefault();
+      if( control ) {
+        mensagem.value += '\n';
+      } else {
+        if( mensagem.value.length != 0 )
+        sendMessage();
+      }
+    } else if( event.key == 'Control' ) {
+      event.preventDefault();
+      control = true;
+    }
+  }
+} );
 
 //  ##  Add Contact
 
@@ -31,9 +64,26 @@ const addContact = document.getElementById( 'addContact' );
 
 function addNewContact( email ) {
   
-  //  Faz os paranauê
+  firebaseFunctions.addContato( currentUser.dataset.uid, email, () => {
+    loadContacs();
+    swal( {
+      icon: 'success',
+      title: 'Contato adicionado',
+    } );
+  } );
+}
 
-  swal.close();
+/**
+ * Carrega dados do usuario logado
+ */
+
+const currentUser = document.getElementById( 'currentUser' );
+
+function loadUserData() {
+  const user = firebaseFunctions.getCurrentUser();
+
+  currentUser.innerText   = 'Não tem displayName';//user.displayName;
+  currentUser.dataset.uid = user.uid;
 }
 
 /**
@@ -85,7 +135,7 @@ function openAddContact() {
   const modalConfirmButton = document.querySelector( '.add-contact-modal .swal-button.swal-button--confirm' );
   modalConfirmButton.setAttribute( 'disabled', 'true' );
 
-  emailInput.addEventListener( 'keydown', () => {
+  emailInput.addEventListener( 'keyup', () => {
     if( validation.validateAddContact( emailInput ) )
       modalConfirmButton.removeAttribute( 'disabled' );
     else
@@ -104,8 +154,6 @@ try {
  */
 
 function loadMessagesView( user ) {
-  const currentContact = document.getElementById( 'currentContact' );
-
   currentContact.innerText   = user.name;
   currentContact.dataset.uid = user.uid;
 }
@@ -153,6 +201,9 @@ function loadMessages( user ) {
  *  Função para quando o contato é clicado
  */
 
+const mainHeader = document.getElementById( 'mainHeader' );
+const mainFooter = document.getElementById( 'mainFooter' );
+
 function changeContactView() {
 
   try {
@@ -160,6 +211,9 @@ function changeContactView() {
   } catch( err ) {}
   
   this.classList.add( 'active' );
+
+  mainHeader.style.display = 'block';
+  mainFooter.style.display = 'flex';
 
   const user = {
     name: this.dataset.name,
@@ -197,6 +251,7 @@ function loadContacs() {
   const contacts = firebaseFunctions.getAllContatos( ( contacts ) => {
     loadContacsTemplate( contacts );
     loadContacsEvents();
+    loadUserData();
     helpers.fadeOut( loader );
   } );
 }
