@@ -19,7 +19,8 @@
 
   //  ##  Error
   input[type=text]:not( .browser-default ).error,
-  input[type=password]:not( .browser-default ).error {
+  input[type=password]:not( .browser-default ).error,
+  input[type=email]:not( .browser-default ).error {
     border-color: map-get( $color, error );
     box-shadow: 0 1px 0 0 map-get( $color, error );
 
@@ -33,7 +34,8 @@
 
   //  ##  Success
   input[type=text]:not( .browser-default ).success,
-  input[type=password]:not( .browser-default ).success {
+  input[type=password]:not( .browser-default ).success,
+  input[type=email]:not( .browser-default ).success {
     border-color: map-get( $color, success );
     box-shadow: 0 1px 0 0 map-get( $color, success );
 

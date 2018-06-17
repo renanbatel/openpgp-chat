@@ -5,17 +5,19 @@ templates['contact'] = template({"1":function(container,depth0,helpers,partials,
 
   return "  <li data-uid=\""
     + alias4(((helper = (helper = helpers.uid || (depth0 != null ? depth0.uid : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"uid","hash":{},"data":data}) : helper)))
+    + "\" data-pubkey=\""
+    + alias4(((helper = (helper = helpers.chavePublica || (depth0 != null ? depth0.chavePublica : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"chavePublica","hash":{},"data":data}) : helper)))
+    + "\" data-name=\""
+    + alias4(((helper = (helper = helpers.nome || (depth0 != null ? depth0.nome : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nome","hash":{},"data":data}) : helper)))
     + "\" class=\"home-sidebar_list-item home-sidebar_contact\">\r\n    <div class=\"row-content spaced\">\r\n        <strong>"
-    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</strong>\r\n        <span>"
-    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
-    + "</span>\r\n    </div>\r\n    <p>"
-    + alias4(((helper = (helper = helpers.message || (depth0 != null ? depth0.message : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"message","hash":{},"data":data}) : helper)))
-    + "</p>\r\n  </li>\r\n";
+    + alias4(((helper = (helper = helpers.nome || (depth0 != null ? depth0.nome : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nome","hash":{},"data":data}) : helper)))
+    + "</strong>\r\n    </div>\r\n  </li>\r\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "  <li class=\"home-sidebar_contact-empty\" >Adicione um contato para começar</li>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "");
 },"useData":true});
 templates['message'] = template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;

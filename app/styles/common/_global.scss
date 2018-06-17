@@ -43,3 +43,44 @@ main {
   display: flex;
   flex-flow: column;
 }
+
+//  ##  SweetAlert
+
+.swal-button {
+  transition: background-color .33s;
+}
+
+.swal-button--confirm {
+  background-color: map-get( $color, secondary );
+
+  &:active {
+    background-color: darken( map-get( $color, secondary ), 12% );
+  }
+  &:hover {
+    background-color: darken( map-get( $color, secondary ), 6% );
+  }
+  &:focus {
+    box-shadow: none;
+  }
+  &.prevent-loading {
+    color: #fff;
+    & ~ .swal-button__loader {
+      display: none;
+    }
+  }
+}
+
+.swal-button--cancel {
+  background-color: lighten( map-get( $color, grey ), 6% );
+
+  &:active {
+    background-color: darken( map-get( $color, grey ), 6% );
+  }
+  &:hover {
+    background-color: map-get( $color, grey );
+  }
+  &:focus {
+    background-color: lighten( map-get( $color, grey ), 6% );
+    box-shadow: none;
+  }
+}

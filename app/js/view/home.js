@@ -1,7 +1,9 @@
-const firebaseFunction = require('./js/firebaseFunctions.js');
-const Materialize      = require( './lib/materialize/js/bin/materialize' );
-const Handlebars       = require( 'handlebars/runtime' );
-const templates        = require( './js/view/templates/templates.js' );
+const firebaseFunctions = require('./js/firebaseFunctions.js');
+const Materialize       = require( './lib/materialize/js/bin/materialize' );
+const Handlebars        = require( 'handlebars/runtime' );
+const templates         = require( './js/view/templates/templates.js' );
+const swal              = require( 'sweetalert' );
+const validation        = require( './js/validation' );
 
 const btnLogout    = document.getElementById('logout');
 const btnSend = document.getElementById('btn-send');
@@ -12,19 +14,110 @@ btnSend.addEventListener('click', (event)=>{
     event.preventDefault();
     let msg = mensagem.value;
     console.log(msg);
-    firebaseFunction.enviarMensagem("ryY1g0TauBSSEIUMI4T0uEC8tQF3",msg);
+    firebaseFunctions.enviarMensagem("ryY1g0TauBSSEIUMI4T0uEC8tQF3",msg);
 } );
 btnLogout.addEventListener('click', (event)=>{
     event.preventDefault();
-    firebaseFunction.logOut();
+    firebaseFunctions.logOut();
 })
 
+//  ##  Add Contact
+
+const addContact = document.getElementById( 'addContact' );
+
+/**
+ * Adiciona o novo contato
+ */
+
+function addNewContact( email ) {
+  
+  //  Faz os paranauê
+
+  swal.close();
+}
+
+/**
+ * Abre o modal para adicionar o contato
+ */
+
+function openAddContact() {
+
+  const emailBase  = document.createElement( 'div' );
+  const emailInput = document.createElement( 'input' );
+  const emailError = document.createElement( 'span' );
+
+  emailBase.className    = 'input-field';
+  emailInput.type        = 'email';
+  emailInput.id          = 'contactEmail';
+  emailInput.placeholder = 'Insira o email do contato';
+  emailError.className   = 'input-feedback';
+  emailError.id          = 'contactEmailFeedback';
+
+  emailBase.appendChild( emailInput );
+  emailBase.appendChild( emailError );
+
+  emailInput.addEventListener( 'focusout', () => validation.validateAddContact( emailInput, emailError ) );
+
+  swal( {
+    title: 'Adicione um contato',
+    content: emailBase,
+    className: 'add-contact-modal',
+    buttons: {
+      cancel: { 
+        text: 'Cancelar',
+        closeModal: true,
+        visible: true
+      }, 
+      confirm: {
+        text: 'Adicionar',
+        value: true,
+        closeModal: false,
+        className: 'prevent-loading',
+      }
+    }
+  } ).then( ( value ) => {
+    if( value && validation.validateAddContact( emailInput, emailError ) ) {
+      document.querySelector( '.add-contact-modal .swal-button.prevent-loading' ).classList.remove( 'prevent-loading' );
+      addNewContact( emailInput.value );
+    }
+  } );
+
+  const modalConfirmButton = document.querySelector( '.add-contact-modal .swal-button.swal-button--confirm' );
+  modalConfirmButton.setAttribute( 'disabled', 'true' );
+
+  emailInput.addEventListener( 'keydown', () => {
+    if( validation.validateAddContact( emailInput ) )
+      modalConfirmButton.removeAttribute( 'disabled' );
+    else
+      modalConfirmButton.setAttribute( 'disabled', 'true' );
+  } );
+}
+
+try {
+  addContact.addEventListener( 'click', openAddContact );
+} catch ( err ) {}
+
 //  ##  Messages
+
+/**
+ * Carrega as informações do contato atual para o elemento Current User
+ */
+
+function loadMessagesView( user ) {
+  const currentContact = document.getElementById( 'currentContact' );
+
+  currentContact.innerText   = user.name;
+  currentContact.dataset.uid = user.uid;
+}
+
+/**
+ * Carrega o template das mensages para listar na view
+ */
 
 function loadMessagesTemplate( user ) {
   let messages = new Array();
 
-  if( user.uid ) {
+  if( user ) {
     messages = [
       {
         message: 'Eae man, suave?',
@@ -50,10 +143,15 @@ function loadMessagesTemplate( user ) {
 }
 
 function loadMessages( user ) {
+  loadMessagesView( user );
   loadMessagesTemplate( user );
 }
 
 //  ##  Contacts
+
+/**
+ *  Função para quando o contato é clicado
+ */
 
 function changeContactView() {
 
@@ -64,33 +162,25 @@ function changeContactView() {
   this.classList.add( 'active' );
 
   const user = {
-    uid: this.dataset.uid
+    name: this.dataset.name,
+    uid : this.dataset.uid
   }
-
   loadMessages( user );
 }
 
-function loadContacsTemplate() {
-  const contacts = [
-    {
-      name: 'Contato',
-      date: 'Data',
-      message: 'Tri-tip pancetta ham hock jowl capicola meatball...',
-      uid: 'uid'
-    }, {
-      name: 'Contato',
-      date: 'Data',
-      message: 'Tri-tip pancetta ham hock jowl capicola meatball...'
-    }, {
-      name: 'Contato',
-      date: 'Data',
-      message: 'Tri-tip pancetta ham hock jowl capicola meatball...'
-    }
-  ];
+/**
+ * Carrega o template de contatos para listar na view
+ */
+
+function loadContacsTemplate( contacts ) {
   const source           = document.getElementById( 'contacts' );
   const template         = Handlebars.templates[ 'contact' ]( contacts );
         source.innerHTML = template;
 }
+
+/**
+ * Registra um evento de click para cada contato da view
+ */
 
 function loadContacsEvents() {
   const contacts = document.querySelectorAll( '.home-sidebar_contact' );
@@ -98,10 +188,18 @@ function loadContacsEvents() {
   contacts.forEach( ( contact ) => contact.addEventListener( 'click', changeContactView ) );
 }
 
+/**
+ * Chama a função de carregar contatos do Firebase
+ */
+
 function loadContacs() {
-  loadContacsTemplate();
-  loadContacsEvents();
+  const contacts = firebaseFunctions.getAllContatos( ( contacts ) => {
+    loadContacsTemplate( contacts );
+    loadContacsEvents();
+  } );
 }
+
+//  ##  Materialize Components
 
 function buildMaterializeDropdown( params ) {
 
@@ -135,6 +233,10 @@ function loadMaterializeComponents() {
     }
   } );
 }
+
+/**
+ * Funções para quando a DOM é carregado
+ */
 
 document.addEventListener( 'DOMContentLoaded', () => {
   loadContacs();

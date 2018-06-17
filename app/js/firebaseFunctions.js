@@ -23,6 +23,8 @@ const loginCounter = new helpers.Counter({
     elem: document.getElementById( 'login_error' )
 });
 
+
+
 function validaSignup() {
 
     var email = document.getElementById('signup_email');
@@ -36,6 +38,7 @@ function validaSignup() {
         signup_form.classList.add('loading');
 
         firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
+            
             openpgp.geraChave(nome.value, email.value);
             setTimeout(() => {
                 let priv = openpgp.getChavePrivada();
@@ -45,6 +48,7 @@ function validaSignup() {
                 email.value = '';
                 senha.value = '';
             }, 3000);
+            addContato("1FaYIAxRNZclQMxd0XJqLyWz5rJ2", "renanbatel@gmail.com");
             const login_screen = document.getElementById('login_screen');
             const login_panel = document.getElementById('login_panel');
             const panel_wrapper = document.getElementById('panel_wrapper');
@@ -73,7 +77,21 @@ function validaSignup() {
                 });
         }).catch(function (error) {
             if (error != null) {
-                console.log("erro " + error);
+                
+                signup_form.classList.remove('loading');
+                email.value = '';
+                senha.value = '';
+                email.classList.remove( 'active', 'success', 'error' );
+                senha.classList.remove( 'active', 'success', 'error' );
+                document.querySelector( 'label[for="signup_email"]' ).classList.remove( 'active' );
+                document.querySelector( 'label[for="signup_senha"]' ).classList.remove( 'active' );
+
+                swal( {
+                    title: 'Oops, temos um problema',
+                    text: 'Este email já está cadastrado em nossa base de dados',
+                    icon: 'error'
+                } );
+
                 return;
             }
         });
@@ -102,7 +120,7 @@ function validaLogin() {
                 login_error.innerText = 'Email ou senha invalídos';
                 senha.value = '';
                 email.classList.remove('success');
-                senha.classList.remove('success');
+                senha.classList.remove('success', 'error');
                 document.querySelector( 'label[for="senha"]' ).classList.remove( 'active' );
                 email.focus();
                 loginCounter.count();
@@ -152,7 +170,7 @@ function addContato(uid, email) {
     });
 }
 
-function getAllUsuarios(uid, callback) {
+function getAllUsuarios(callback) {
     var usuarios = database.ref('usuarios');
     var usuInfo = [];
     usuarios.once('value', function (snapshot) {
@@ -163,17 +181,30 @@ function getAllUsuarios(uid, callback) {
     });
 }
 
+function getAllContatos(callback) {
+    firebase.auth().onAuthStateChanged( ( user ) => {
+        var contatos = database.ref('usuarios/' + user.uid + '/contatos');
+        var usuContato = [];
+        contatos.once('value', function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                usuContato.push(childSnapshot.val());
+            });
+            callback( usuContato );
+        });
+    } )
+}
+
 function carregaMensagem(OutroUser) {
     var user = firebase.auth().currentUser;
     var mensagem = database.ref('mensagens/');
     mensagem.off();
     var setMensagem = function (data) {
-        if(data.uidEmitente == user.uid && data.uidDestinatario == OutroUser)
+        if((data.uidEmitente == user.uid && data.uidDestinatario == OutroUser) || (data.uidEmitente == OutroUser && data.uidDestinatario == user.uid))
         console.log(data.val())
     }
     if (user) {
-        mensagem.limitToLast(10).on('child_added', setMensagem); //lê as ultimas 10 mensagens
-        mensagem.limitToLast(10).on('child_changed', setMensagem);//lê as ultimas 10 mensagens
+        mensagem.on('child_added', setMensagem); //lê as ultimas 10 mensagens
+        mensagem.on('child_changed', setMensagem);//lê as ultimas 10 mensagens
     }
 }
 
@@ -187,6 +218,7 @@ function enviarMensagem(uidDestinatario) {
         console.log('USUARIO NÃO LOGADO')
     }
 }
+
 // Exports
 module.exports = {
     validaSignup,
@@ -197,5 +229,6 @@ module.exports = {
     validaLogin,
     validaSignup,
     carregaMensagem,
-    enviarMensagem
+    enviarMensagem,
+    getAllContatos
 }

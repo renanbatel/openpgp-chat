@@ -6,7 +6,9 @@ function validated(input, feedback) {
 
   input.classList.remove('error');
   input.classList.add('success');
-  feedback.innerText = '';
+  
+  if( feedback )
+    feedback.innerText = '';
 
   return true;
 }
@@ -17,7 +19,7 @@ function initValidation(input) {
 
 //  ##  Name Validation
 
-const signup_name = document.getElementById('signup_nome');
+const signup_name          = document.getElementById('signup_nome');
 const signup_name_feedback = document.getElementById('signup_nome_feedback');
 
 function validateName(input, feedback) {
@@ -42,10 +44,12 @@ try {
 
 //  ##  Email Validation
 
-const email = document.getElementById('email');
-const email_feedback = document.getElementById('email_feedback');
-const signup_email = document.getElementById('signup_email');
+const email                 = document.getElementById('email');
+const email_feedback        = document.getElementById('email_feedback');
+const signup_email          = document.getElementById('signup_email');
 const signup_email_feedback = document.getElementById('signup_email_feedback');
+// const contactEmail          = document.getElementById( 'contactEmail' );
+// const contactEmailFeedback  = document.getElementById( 'contactEmailFeedback' );
 
 function validateEmail(input, feedback) {
 
@@ -77,9 +81,9 @@ try {
 
 //  ##  Password Validation
 
-const password = document.getElementById('senha');
-const password_feedback = document.getElementById('senha_feedback');
-const signup_password = document.getElementById('signup_senha');
+const password                 = document.getElementById('senha');
+const password_feedback        = document.getElementById('senha_feedback');
+const signup_password          = document.getElementById('signup_senha');
 const signup_password_feedback = document.getElementById('signup_senha_feedback');
 
 function validatePassword(input, feedback) {
@@ -134,9 +138,34 @@ function validateSignup() {
   return validateName(signup_name, signup_name_feedback) && validateEmail(signup_email, signup_email_feedback) && validatePassword(signup_password, signup_password_feedback) && validatePasswordLength(signup_password, signup_password_feedback);
 }
 
+function validateAddContact( input, feedback ) {
+  const value = input.value;
+
+  initValidation(input);
+
+  if (Validator.isEmpty(value)) {
+    input.classList.add('error');
+    
+    if( feedback )
+      feedback.innerText = 'Por favor insira o email do contato';
+
+    return false;
+  } else if (!Validator.isEmail(value)) {
+    input.classList.add('error');
+    
+    if( feedback )
+      feedback.innerText = 'Por favor insira um email válido';
+
+    return false;
+  }
+
+  return validated(input, feedback);
+}
+
 //  ##  Export
 
 module.exports = {
   validateLogin,
-  validateSignup
+  validateSignup,
+  validateAddContact
 }

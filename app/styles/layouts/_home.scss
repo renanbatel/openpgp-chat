@@ -29,9 +29,9 @@
 .home-sidebar {
   height: 100vh;
   background-color: map-get( $color, light );
+  border-right: 1px solid darken( map-get( $color, grey ), 4% ); 
 
   .home-screen_header {
-    border-right: 1px solid darken( map-get( $color, grey ), 4% );
     border-bottom: 1px solid darken( map-get( $color, grey ), 4% );
 
     > .row-content {
@@ -66,6 +66,11 @@
   }
 }
 
+.home-sidebar_content {
+  flex: 1;
+  position: relative;
+}
+
 .home-sidebar_list {
   @include custom-scroll-bar( map-get( $color, light ), map-get( $color, grey ) );
   margin: 0;
@@ -88,6 +93,16 @@
   &.active {
     background-color: map-get( $color, grey );
   }
+}
+
+.home-sidebar_contact-empty {
+  padding: 8px 14px;
+}
+
+#addContact {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
 }
 
 //  ##  Home Main
