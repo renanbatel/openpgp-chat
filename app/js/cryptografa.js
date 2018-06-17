@@ -1,3 +1,4 @@
+const {dialog} = require('electron').remote;
 let openpgp = require('openpgp');
 let chavePrivada;
 let chavePublica;
@@ -17,21 +18,6 @@ function geraChave(nome, email) {
     openpgp.generateKey(options).then(function (key) {
         chavePrivada = key.privateKeyArmored;
         chavePublica = key.publicKeyArmored;
-
-
-        var fs = require('fs');
-        var file = ('./_key');
-        console.log(file);
-        if (!fs.exists(file))
-            fs.writeFile(file, chavePrivada, function (err) {
-                if (err) {
-                    return console.log(err);
-                }
-
-                console.log("The file was saved!");
-            });
-
-
         return;
     });
 
@@ -58,6 +44,47 @@ function descifraMsg(privtKey, message) {
 function getCifrada() {
     return cifrada
 }
+function salvaChave(){
+        let path = dialog.showOpenDialog({properties:['openDirectory']});
+        var fs = require('fs');
+        var file = (path + '/_key');
+        if(path == null){
+            console.log('false');
+            return false;
+        }
+        else{            
+            fs.writeFile(file, chavePrivada, function (err) {
+                if (err) {
+                    return console.log(err);
+                }
+                console.log('true');
+                
+            })
+            return true;
+        }
+
+}
+function leChave(){
+    let path = dialog.showOpenDialog({properties:['openFile']})
+
+        var fs = require('fs');
+        if(path == null){
+            console.log('false');
+            return false;
+        }
+        else{            
+            path = path[0];
+            fs.readFile(path, function (err, data) {
+                if (err) {
+                    return console.log(err);
+                }
+                chavePrivada = data.toString();
+                console.log(chavePrivada);
+                
+            })
+            return true;
+        }
+}
 //  ##  Export
 module.exports = {
     geraChave,
@@ -65,5 +92,7 @@ module.exports = {
     descifraMsg,
     getChavePrivada,
     getChavePublica,
-    getCifrada
+    getCifrada,
+    salvaChave,
+    leChave
 }

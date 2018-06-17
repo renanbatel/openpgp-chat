@@ -4,11 +4,52 @@ const Handlebars        = require( 'handlebars/runtime' );
 const templates         = require( './js/view/templates/templates.js' );
 const swal              = require( 'sweetalert' );
 const validation        = require( './js/validation' );
+const openpgp           = require('./js/cryptografa');
 
 const btnLogout    = document.getElementById('logout');
+const btnaddChave    = document.getElementById('addchave');
 const btnSend = document.getElementById('btn-send');
 const mensagem = document.getElementById('message'); 
+const private_key_get = document.createElement('span');
+private_key_get.className = 'private-key-modal';
+private_key_get.innerText = 'Clique aqui para selecionar sua chave';
 
+swal({
+  title: 'Adicione sua chave privada',
+  text: 'A gente precisa da sua chave privada para ler as mensagens',
+  icon: 'success',
+  content: private_key_get
+})
+btnaddChave.addEventListener('click',(e)=>{
+  e.preventDefault();
+  addChavePrivada();
+})
+private_key_get.addEventListener('click', (e)=>{
+  e.preventDefault();
+  addChavePrivada();
+})
+function addChavePrivada(){
+  validaPath = openpgp.leChave()
+  setTimeout(() => {
+      if(validaPath){
+          firebaseFunctions.setChavePrivada(openpgp.getChavePrivada());
+          swal({
+            title: 'Pronto',
+            text: 'Suas mensagens serão carregadas',
+            icon: 'success',
+            buttons: 'Ok'
+        })        
+      }
+      else{
+          swal({
+              title: 'OOops',
+              text: 'Passe um arquivo valido',
+              icon: 'error',
+              content: private_key_get
+          })        
+      }  
+  }, 400);
+}
 
 btnSend.addEventListener('click', (event)=>{
     event.preventDefault();

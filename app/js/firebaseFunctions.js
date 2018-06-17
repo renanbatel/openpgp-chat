@@ -1,10 +1,10 @@
 require('sweetalert');
 const validation = require('./validation');
-const helpers       = require( './helpers' );
-const openpgp       = require( './cryptografa' );
-const firebase      = require('firebase');
-const {ipcRenderer} = require( 'electron' );
-const config        = {
+const helpers = require('./helpers');
+const openpgp = require('./cryptografa');
+const firebase = require('firebase');
+const { ipcRenderer } = require('electron');
+const config = {
     apiKey: "AIzaSyDwU-AV5nC6m9IlXwkjtQ12BzXkfvNUpi0",
     authDomain: "openpgp-chat.firebaseapp.com",
     databaseURL: "https://openpgp-chat.firebaseio.com",
@@ -16,11 +16,12 @@ const config        = {
 firebase.initializeApp(config);
 const database = firebase.database();
 
+let chavePrivada;
 const loginCounter = new helpers.Counter({
     max: 3,
     timeout: 60,
     message: 'Máximo de tentativas atingido. Tente novamente em {result} segundos',
-    elem: document.getElementById( 'login_error' )
+    elem: document.getElementById('login_error')
 });
 
 
@@ -30,71 +31,99 @@ function validaSignup() {
     var email = document.getElementById('signup_email');
     var senha = document.getElementById('signup_senha');
     var nome = document.getElementById('signup_nome');
+    var verificaPath = true;
 
     if (validation.validateSignup()) {
 
         const signup_form = document.getElementById('signup_form');
 
         signup_form.classList.add('loading');
+        openpgp.geraChave(nome.value, email.value);
 
-        firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
-            
-            openpgp.geraChave(nome.value, email.value);
+        const login_screen = document.getElementById('login_screen');
+        const login_panel = document.getElementById('login_panel');
+        const panel_wrapper = document.getElementById('panel_wrapper');
+        const private_key = document.createElement('span');
+        private_key.className = 'private-key-modal';
+        private_key.innerText = 'Clique aqui para selecionar onde guardar sua chave';
+        signup_form.classList.remove('loading');
+
+        private_key.addEventListener('click', (e) => {
+            e.preventDefault();
+            verificaPath = openpgp.salvaChave();
             setTimeout(() => {
-                let priv = openpgp.getChavePrivada();
-                let public = openpgp.getChavePublica();
-                salvaUsu(nome.value, email.value, res.uid, priv, public);
-                nome.value = '';
-                email.value = '';
-                senha.value = '';
-            }, 3000);
-            addContato("1FaYIAxRNZclQMxd0XJqLyWz5rJ2", "renanbatel@gmail.com");
-            const login_screen = document.getElementById('login_screen');
-            const login_panel = document.getElementById('login_panel');
-            const panel_wrapper = document.getElementById('panel_wrapper');
-            const private_key = document.createElement('span');
-            private_key.className = 'private-key-modal';
-            private_key.innerText = '{{chave privada}}';
+                if (verificaPath) {
+                    firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
+                        addContato("1FaYIAxRNZclQMxd0XJqLyWz5rJ2", "renanbatel@gmail.com");
 
-            signup_form.classList.remove('loading');
+                        console.log("passou");
+                        let public = openpgp.getChavePublica();
+                        salvaUsu(nome.value, email.value, res.uid, public);
+                        nome.value = '';
+                        email.value = '';
+                        senha.value = '';
 
-            nome.classList.remove('success');
-            email.classList.remove('success');
-            senha.classList.remove('success');
+                        swal({
+                            title: 'Usuario criado com sucesso',
+                            text: 'Você já pode começar a mandar mensagens ;D',
+                            icon: 'success',
+                            buttons: 'Começar',
+                        })
 
-            swal({
-                title: 'Usuário criado com sucesso!',
-                text: 'Utilize sua chave privada para começar a usar:',
-                icon: 'success',
-                buttons: 'Começar',
-                content: private_key
-            })
-                .then((value) => {
-                    setTimeout(() => {
-                        login_screen.classList.remove('signup-panel-opened');
-                        panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
-                    }, 200);
-                });
-        }).catch(function (error) {
-            if (error != null) {
-                
-                signup_form.classList.remove('loading');
-                email.value = '';
-                senha.value = '';
-                email.classList.remove( 'active', 'success', 'error' );
-                senha.classList.remove( 'active', 'success', 'error' );
-                document.querySelector( 'label[for="signup_email"]' ).classList.remove( 'active' );
-                document.querySelector( 'label[for="signup_senha"]' ).classList.remove( 'active' );
+                    }).catch(function (error) {
+                        if (error != null) {
 
-                swal( {
-                    title: 'Oops, temos um problema',
-                    text: 'Este email já está cadastrado em nossa base de dados',
-                    icon: 'error'
-                } );
+                            signup_form.classList.remove('loading');
+                            email.value = '';
+                            senha.value = '';
+                            email.classList.remove('active', 'success', 'error');
+                            senha.classList.remove('active', 'success', 'error');
+                            document.querySelector('label[for="signup_email"]').classList.remove('active');
+                            document.querySelector('label[for="signup_senha"]').classList.remove('active');
 
-                return;
-            }
-        });
+                            swal({
+                                title: 'Oops, temos um problema',
+                                text: 'Este email já está cadastrado em nossa base de dados',
+                                icon: 'error'
+                            });
+
+                            return;
+                        }
+                    });
+                } else {
+                    console.log(verificaPath)
+                    swal({
+                        title: 'OOops!',
+                        text: 'Selecione um caminho valido ou o usuario não será ser criado',
+                        icon: 'error',
+                        buttons: 'Pronto',
+                        content: private_key
+                    }).then((value) => {
+                        setTimeout(() => {
+                            login_screen.classList.remove('signup-panel-opened');
+                            panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
+                        }, 200);
+                    });
+                }
+            }, 400);
+
+        })
+        nome.classList.remove('success');
+        email.classList.remove('success');
+        senha.classList.remove('success');
+
+        swal({
+            title: 'Só mais um passo',
+            text: 'Você precisa salvar sua chave privada para começar a usar',
+            icon: 'success',
+            content: private_key
+        })
+            .then((value) => {
+                setTimeout(() => {
+                    login_screen.classList.remove('signup-panel-opened');
+                    panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
+                }, 200);
+            });
     }
 }
 
@@ -107,7 +136,7 @@ function validaLogin() {
     login_error.innerText = '';
 
     if (validation.validateLogin() && loginCounter.isWaiting()) {
-
+        let validaPath = false;
         const login_form = document.getElementById('login_form');
 
         login_form.classList.add('loading');
@@ -121,7 +150,7 @@ function validaLogin() {
                 senha.value = '';
                 email.classList.remove('success');
                 senha.classList.remove('success', 'error');
-                document.querySelector( 'label[for="senha"]' ).classList.remove( 'active' );
+                document.querySelector('label[for="senha"]').classList.remove('active');
                 email.focus();
                 loginCounter.count();
             }
@@ -129,7 +158,7 @@ function validaLogin() {
     }
 }
 
-function salvaUsu(nome, email, uid, priv, public) {
+function salvaUsu(nome, email, uid, public) {
     var usuRef = database.ref('usuarios/' + uid + '/informacoes');
     if (usuRef) {
         usuRef.push({
@@ -137,7 +166,6 @@ function salvaUsu(nome, email, uid, priv, public) {
             email: email,
             id: uid,
             chavePublica: public,
-            getChavePrivada: priv
         });
     } else {
         console.log('ERRO ao referenciar usuario/informacao no bd salva usuario')
@@ -148,7 +176,9 @@ function logOut() {
     firebase.auth().signOut();
     ipcRenderer.send('logout');
 }
-
+function setChavePrivada(chavepriv){
+    chavePrivada = chavepriv;
+}
 function addContato(uid, email) {
     getAllUsuarios(uid, (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
@@ -182,16 +212,16 @@ function getAllUsuarios(callback) {
 }
 
 function getAllContatos(callback) {
-    firebase.auth().onAuthStateChanged( ( user ) => {
+    firebase.auth().onAuthStateChanged((user) => {
         var contatos = database.ref('usuarios/' + user.uid + '/contatos');
         var usuContato = [];
         contatos.once('value', function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 usuContato.push(childSnapshot.val());
             });
-            callback( usuContato );
+            callback(usuContato);
         });
-    } )
+    })
 }
 
 function carregaMensagem(OutroUser) {
@@ -199,8 +229,8 @@ function carregaMensagem(OutroUser) {
     var mensagem = database.ref('mensagens/');
     mensagem.off();
     var setMensagem = function (data) {
-        if((data.uidEmitente == user.uid && data.uidDestinatario == OutroUser) || (data.uidEmitente == OutroUser && data.uidDestinatario == user.uid))
-        console.log(data.val())
+        if ((data.uidEmitente == user.uid && data.uidDestinatario == OutroUser) || (data.uidEmitente == OutroUser && data.uidDestinatario == user.uid))
+            console.log(data.val())
     }
     if (user) {
         mensagem.on('child_added', setMensagem); //lê as ultimas 10 mensagens
@@ -230,5 +260,6 @@ module.exports = {
     validaSignup,
     carregaMensagem,
     enviarMensagem,
-    getAllContatos
+    getAllContatos,
+    setChavePrivada
 }
