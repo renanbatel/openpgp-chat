@@ -24,6 +24,23 @@
   }
 }
 
+.loader.home {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: map-get( $color, primary );
+  z-index: 2;
+
+  .sk-cube-grid .sk-cube {
+    background-color: map-get( $color, light );
+  }
+}
+
 //  ##  Home Sidebar
 
 .home-sidebar {
@@ -101,8 +118,14 @@
 
 #addContact {
   position: absolute;
+  width: 48px;
+  height: 48px;
   bottom: 12px;
   right: 12px;
+
+  .material-icons {
+    line-height: 48px;
+  }
 }
 
 //  ##  Home Main

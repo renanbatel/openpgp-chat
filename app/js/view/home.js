@@ -4,17 +4,17 @@ const Handlebars        = require( 'handlebars/runtime' );
 const templates         = require( './js/view/templates/templates.js' );
 const swal              = require( 'sweetalert' );
 const validation        = require( './js/validation' );
+const helpers           = require( './js/helpers' );
 
 const btnLogout    = document.getElementById('logout');
 const btnSend = document.getElementById('btn-send');
 const mensagem = document.getElementById('message'); 
 
-
 btnSend.addEventListener('click', (event)=>{
     event.preventDefault();
     let msg = mensagem.value;
     console.log(msg);
-    firebaseFunctions.enviarMensagem("ryY1g0TauBSSEIUMI4T0uEC8tQF3",msg);
+    // firebaseFunctions.enviarMensagem("ryY1g0TauBSSEIUMI4T0uEC8tQF3",msg);
 } );
 btnLogout.addEventListener('click', (event)=>{
     event.preventDefault();
@@ -193,9 +193,11 @@ function loadContacsEvents() {
  */
 
 function loadContacs() {
+  const loader   = document.getElementById( 'loader' );
   const contacts = firebaseFunctions.getAllContatos( ( contacts ) => {
     loadContacsTemplate( contacts );
     loadContacsEvents();
+    helpers.fadeOut( loader );
   } );
 }
 
