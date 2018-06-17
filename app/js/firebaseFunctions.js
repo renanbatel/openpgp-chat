@@ -16,7 +16,8 @@ const config = {
 firebase.initializeApp(config);
 const database = firebase.database();
 
-let chavePrivada;
+let chavePrivada = null;
+
 const loginCounter = new helpers.Counter({
     max: 3,
     timeout: 60,
@@ -54,9 +55,6 @@ function validaSignup() {
             setTimeout(() => {
                 if (verificaPath) {
                     firebase.auth().createUserWithEmailAndPassword(email.value, senha.value).then(res => {
-                        addContato("1FaYIAxRNZclQMxd0XJqLyWz5rJ2", "renanbatel@gmail.com");
-
-                        console.log("passou");
                         let public = openpgp.getChavePublica();
                         salvaUsu(nome.value, email.value, res.uid, public);
                         nome.value = '';
@@ -98,16 +96,11 @@ function validaSignup() {
                 } else {
                     console.log(verificaPath)
                     swal({
-                        title: 'OOops!',
-                        text: 'Selecione um caminho valido ou o usuario não será ser criado',
+                        title: 'Oops!',
+                        text: 'Selecione um caminho valido ou o usuario não será criado',
                         icon: 'error',
-                        buttons: 'Pronto',
+                        buttons: 'Ok',
                         content: private_key
-                    }).then((value) => {
-                        setTimeout(() => {
-                            login_screen.classList.remove('signup-panel-opened');
-                            panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
-                        }, 200);
                     });
                 }
             }, 400);
@@ -120,15 +113,21 @@ function validaSignup() {
         swal({
             title: 'Só mais um passo',
             text: 'Você precisa salvar sua chave privada para começar a usar',
-            icon: 'success',
-            content: private_key
-        })
-            .then((value) => {
-                setTimeout(() => {
-                    login_screen.classList.remove('signup-panel-opened');
-                    panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
-                }, 200);
-            });
+            icon: 'info',
+            closeOnEsc: false,
+            closeOnClickOutside: false,
+            content: private_key,
+            buttons: {
+                cancel: {
+                    text: 'Cancelar',
+                    value: null,
+                    visible: true
+                },
+                confirm: {
+                    visible: false
+                }
+            }
+        });
     }
 }
 
@@ -184,14 +183,21 @@ function logOut() {
 function setChavePrivada(chavepriv){
     chavePrivada = chavepriv;
 }
-function addContato(uid, email) {
-    getAllUsuarios(uid, (usuarios) => {
+
+function getChavePrivada( chavepriv ) {
+    return chavePrivada;
+}
+
+function addContato(uid, email, callback) {
+    getAllUsuarios( (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
         var notFound = true;
+        console.log( info );
         if (usuRef) {
             info.forEach(i => {
                 var obj = i[Object.keys(i)[0]];
+                console.log( obj );
                 if (obj.email == email) {
                     notFound = false;
                     usuRef.push({
@@ -278,5 +284,6 @@ module.exports = {
     enviarMensagem,
     getAllContatos,
     setChavePrivada,
-    getCurrentUser
+    getCurrentUser,
+    getChavePrivada
 }

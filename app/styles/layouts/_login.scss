@@ -30,7 +30,7 @@
     z-index: 2;
   }
   .panel-title {
-    margin-bottom: 0;
+    margin-bottom: 16px;
   }
   .title-wrapper {
     margin-bottom: 16px;
@@ -112,8 +112,4 @@
   //   background-color: map-get( $color, primary );
   //   content: '';
   // }
-}
-
-.private-key-modal {
-  color: map-get( $color, primary );
 }

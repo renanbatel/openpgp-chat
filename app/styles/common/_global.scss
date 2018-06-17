@@ -154,3 +154,13 @@ main {
     box-shadow: none;
   }
 }
+
+.private-key-modal {
+  color: map-get( $color, secondary );
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    color: darken( map-get( $color, secondary ), 8% );
+  }
+}

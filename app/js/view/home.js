@@ -7,6 +7,7 @@ const validation        = require( './js/validation' );
 const openpgp           = require('./js/cryptografa');
 const helpers           = require('./js/helpers')
 
+const currentUser = document.getElementById( 'currentUser' );
 const btnLogout    = document.getElementById('logout');
 const btnaddChave    = document.getElementById('addchave');
 const btnSend = document.getElementById('btn-send');
@@ -15,12 +16,6 @@ const private_key_get = document.createElement('span');
 private_key_get.className = 'private-key-modal';
 private_key_get.innerText = 'Clique aqui para selecionar sua chave';
 
-swal({
-  title: 'Adicione sua chave privada',
-  text: 'A gente precisa da sua chave privada para ler as mensagens',
-  icon: 'success',
-  content: private_key_get
-})
 btnaddChave.addEventListener('click',(e)=>{
   e.preventDefault();
   addChavePrivada();
@@ -43,7 +38,7 @@ function addChavePrivada(){
       }
       else{
           swal({
-              title: 'OOops',
+              title: 'Oops',
               text: 'Passe um arquivo valido',
               icon: 'error',
               content: private_key_get
@@ -56,6 +51,17 @@ btnLogout.addEventListener('click', (event)=>{
     event.preventDefault();
     firebaseFunctions.logOut();
 })
+
+//  ##  Message
+
+let control = false;
+
+function sendMessage() {
+  const content = mensagem.value;
+  firebaseFunctions.enviarMensagem( currentContact.dataset.uid, content );
+}
+
+btnSend.addEventListener('click', sendMessage );
 
 mensagem.addEventListener( 'keyup' , ( event ) => {
   if( mensagem.value.length == 0 ) {
@@ -95,7 +101,6 @@ const addContact = document.getElementById( 'addContact' );
  */
 
 function addNewContact( email ) {
-  
   firebaseFunctions.addContato( currentUser.dataset.uid, email, () => {
     loadContacs();
     swal( {
@@ -108,8 +113,6 @@ function addNewContact( email ) {
 /**
  * Carrega dados do usuario logado
  */
-
-const currentUser = document.getElementById( 'currentUser' );
 
 function loadUserData() {
   const user = firebaseFunctions.getCurrentUser();
@@ -285,6 +288,25 @@ function loadContacs() {
     loadContacsEvents();
     loadUserData();
     helpers.fadeOut( loader );
+    console.log( firebaseFunctions.getChavePrivada() );
+    if( ! firebaseFunctions.getChavePrivada() ) {
+      swal({
+        title: 'Adicione sua chave privada',
+        text: 'A gente precisa da sua chave privada para ler as mensagens',
+        icon: 'warning',
+        content: private_key_get,
+        buttons: {
+          cancel: {
+            text: 'Cancelar',
+            value: null,
+            visible: true
+          },
+          confirm: {
+            visible: false
+          }
+        }
+      });
+    }
   } );
 }
 
