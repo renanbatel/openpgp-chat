@@ -29,10 +29,16 @@ app.on('ready', () => {
     width:  1280,
     height: 720,
     minWidth: 1280,
-    minHeight: 720
+    minHeight: 720,
+    backgroundColor: '#08587E',
+    show: false
   } );
   mainWindow.setMenuBarVisibility( false );
   mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+  mainWindow.once( 'ready-to-show', () => {
+    mainWindow.show();
+  } );
 
 
   // mainWindow.loadURL( url.format( {

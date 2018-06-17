@@ -44,6 +44,12 @@ class Counter {
   }
 }
 
+function fadeOut( elem ) {
+    elem.style.opacity == '' ? elem.style.opacity = '1' : elem.style.opacity = parseFloat( elem.style.opacity ) - 0.1;
+    parseFloat( elem.style.opacity ) > 0 ? setTimeout( () => fadeOut( elem ), 16 ) : elem.style.display = 'none';
+}
+
 module.exports = {
-  Counter
+  Counter,
+  fadeOut
 }

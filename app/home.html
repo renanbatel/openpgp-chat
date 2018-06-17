@@ -10,6 +10,19 @@
 </head>
 
 <body>
+    <div id="loader" class="loader home">
+        <div class="sk-cube-grid">
+            <div class="sk-cube sk-cube1"></div>
+            <div class="sk-cube sk-cube2"></div>
+            <div class="sk-cube sk-cube3"></div>
+            <div class="sk-cube sk-cube4"></div>
+            <div class="sk-cube sk-cube5"></div>
+            <div class="sk-cube sk-cube6"></div>
+            <div class="sk-cube sk-cube7"></div>
+            <div class="sk-cube sk-cube8"></div>
+            <div class="sk-cube sk-cube9"></div>
+        </div>
+    </div>
     <div id="app">
         <div class="app-wrapper">
             <main id="main">
@@ -21,8 +34,7 @@
                                 <header class="home-screen_header">
                                     <div class="row-content aligned spaced">
                                         <div class="home-sidebar_user column-content">
-                                            <strong>Usuário</strong>
-                                            <span>Alguma coisa</span>
+                                            <strong id="currentUser">Usuário</strong>
                                         </div>
                                         <div class="home-sidebar_options">
                                             <div class="row-content aligned">
@@ -49,7 +61,7 @@
                                 </div>
                             </div>
                             <div class="col s8 home-main column-content">
-                                <header class="home-screen_header">
+                                <header id="mainHeader" class="home-screen_header">
                                     <div class="row-content aligned spaced">
                                         <div class="home-main_user column-content">
                                             <strong id="currentContact"></strong>
@@ -77,12 +89,12 @@
                                         </div>
                                     </ul>
                                 </article>
-                                <footer class="home-main_footer row-content">
+                                <footer id="mainFooter" class="home-main_footer row-content">
                                     <div class="input-field">
                                         <textarea name="message" id="message" cols="1" rows="1" class="materialize-textarea"></textarea>
                                     </div>
                                     <div class="home-main_footer-send row-content aligned">
-                                        <button id="btn-send" class="waves-effect waves-light btn-flat btn-icon">
+                                        <button id="btn-send" class="waves-effect waves-light btn-flat btn-icon" disabled>
                                             <i class="material-icons">send</i>
                                         </button>
                                     </div>

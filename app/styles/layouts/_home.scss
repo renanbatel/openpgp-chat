@@ -1,3 +1,7 @@
+#mainHeader, #mainFooter {
+  display: none;
+}
+
 .home-screen {
   > .row > .col {
     padding: 0;
@@ -21,6 +25,23 @@
         background-color: map-get( $color, grey );
       }
     }
+  }
+}
+
+.loader.home {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: map-get( $color, primary );
+  z-index: 2;
+
+  .sk-cube-grid .sk-cube {
+    background-color: map-get( $color, light );
   }
 }
 
@@ -101,8 +122,14 @@
 
 #addContact {
   position: absolute;
+  width: 48px;
+  height: 48px;
   bottom: 12px;
   right: 12px;
+
+  .material-icons {
+    line-height: 48px;
+  }
 }
 
 //  ##  Home Main
@@ -112,6 +139,10 @@
 
   .home-screen_header {
     border-bottom: 1px solid darken( map-get( $color, grey ), 4% );
+  }
+  footer {
+    flex: 0 0 auto;
+    align-items: flex-end;
   }
 }
 
@@ -123,7 +154,7 @@
 }
 
 .home-main_messages {
-  flex: 1;
+  flex: 1 1 auto;
   background-color: map-get( $color, primary );
 }
 
