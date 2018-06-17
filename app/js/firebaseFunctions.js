@@ -68,7 +68,12 @@ function validaSignup() {
                             text: 'Você já pode começar a mandar mensagens ;D',
                             icon: 'success',
                             buttons: 'Começar',
-                        })
+                        }).then((value) => {
+                            setTimeout(() => {
+                                login_screen.classList.remove('signup-panel-opened');
+                                panel_wrapper.style.height = `${login_panel.offsetHeight}px`;
+                            }, 200);
+                        });
 
                     }).catch(function (error) {
                         if (error != null) {

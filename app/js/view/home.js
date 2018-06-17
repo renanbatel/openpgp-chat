@@ -5,6 +5,7 @@ const templates         = require( './js/view/templates/templates.js' );
 const swal              = require( 'sweetalert' );
 const validation        = require( './js/validation' );
 const openpgp           = require('./js/cryptografa');
+const helpers           = require('./js/helpers')
 
 const btnLogout    = document.getElementById('logout');
 const btnaddChave    = document.getElementById('addchave');
