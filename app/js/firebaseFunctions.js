@@ -193,7 +193,6 @@ function addContato(uid, email, callback) {
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
         var notFound = true;
-        console.log( info );
         if (usuRef) {
             info.forEach(i => {
                 var obj = i[Object.keys(i)[0]];
@@ -243,18 +242,36 @@ function getAllContatos(callback) {
     })
 }
 
-function carregaMensagem(OutroUser) {
+function carregaMensagem(OutroUser, callback) {
     var user = firebase.auth().currentUser;
+    console.log( OutroUser, user.uid );
     var mensagem = database.ref('mensagens/');
     mensagem.off();
     var setMensagem = function (data) {
-        if ((data.uidEmitente == user.uid && data.uidDestinatario == OutroUser) || (data.uidEmitente == OutroUser && data.uidDestinatario == user.uid))
-            console.log(data.val())
+        const value = data.val();
+        if ( value.uidEmitente == user.uid && value.uidDestinatario == OutroUser ) {
+            callback( {
+                message: value.mensagem,
+                date: '14:00'
+            } );
+        }
+        else if( value.uidEmitente == OutroUser && value.uidDestinatario == user.uid ) {
+            callback( {
+                message: value.mensagem,
+                date: '14:00',
+                from: OutroUser
+            } );
+        }
     }
     if (user) {
         mensagem.on('child_added', setMensagem); //lê as ultimas 10 mensagens
         mensagem.on('child_changed', setMensagem);//lê as ultimas 10 mensagens
     }
+    // mensagem.once( 'value', ( snapshot ) => {
+    //     snapshot.forEach( ( childSnapshot ) => {
+    //         console.log( childSnapshot.val() );
+    //     } )
+    // } );
 }
 
 function enviarMensagem(uidDestinatario, content) {

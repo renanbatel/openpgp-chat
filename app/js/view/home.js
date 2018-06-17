@@ -58,6 +58,7 @@ let control = false;
 
 function sendMessage() {
   const content = mensagem.value;
+  console.log( content );
   firebaseFunctions.enviarMensagem( currentContact.dataset.uid, content );
 }
 
@@ -200,29 +201,33 @@ function loadMessagesView( user ) {
 function loadMessagesTemplate( user ) {
   let messages = new Array();
 
-  if( user ) {
-    messages = [
-      {
-        message: 'Eae man, suave?',
-        date: '12:00',
-      }, {
-        message: 'Suave man, e ae?',
-        date: '12:02',
-        from: 'contact'
-      }, {
-        message: 'Spicy jalapeno bacon ipsum dolor amet bresaola fatback picanha meatloaf. Venison ham turducken, pork biltong brisket beef ribs',
-        date: '12:05',
-      }, {
-        message: 'Tri-tip pancetta ham hock jowl capicola meatball. Kielbasa swine pig, pastrami pork loin ball tip shoulder pork chop',
-        date: '12:08',
-        from: 'contact'
-      }
-    ];
-  }
+  // if( user ) {
+  //   messages = [
+  //     {
+  //       message: 'Eae man, suave?',
+  //       date: '12:00',
+  //     }, {
+  //       message: 'Suave man, e ae?',
+  //       date: '12:02',
+  //       from: 'contact'
+  //     }, {
+  //       message: 'Spicy jalapeno bacon ipsum dolor amet bresaola fatback picanha meatloaf. Venison ham turducken, pork biltong brisket beef ribs',
+  //       date: '12:05',
+  //     }, {
+  //       message: 'Tri-tip pancetta ham hock jowl capicola meatball. Kielbasa swine pig, pastrami pork loin ball tip shoulder pork chop',
+  //       date: '12:08',
+  //       from: 'contact'
+  //     }
+  //   ];
+  // }
 
   const source           = document.getElementById( 'messages' );
-  const template         = Handlebars.templates[ 'message' ]( messages );
-        source.innerHTML = template;
+        source.innerHTML = '';
+
+  firebaseFunctions.carregaMensagem( user.uid, ( message ) => {
+    const template          = Handlebars.templates[ 'message' ]( message );
+          source.innerHTML += template;
+  } );
 }
 
 function loadMessages( user ) {
@@ -288,7 +293,6 @@ function loadContacs() {
     loadContacsEvents();
     loadUserData();
     helpers.fadeOut( loader );
-    console.log( firebaseFunctions.getChavePrivada() );
     if( ! firebaseFunctions.getChavePrivada() ) {
       swal({
         title: 'Adicione sua chave privada',
