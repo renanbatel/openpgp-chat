@@ -253,7 +253,7 @@ function carregaMensagem(OutroUser, callback) {
             } );
         }
         else if( value.uidEmitente == OutroUser && value.uidDestinatario == user.uid ) {
-            openpgp.descifraMsg(chavePrivada, value.message,(plainText)=>{
+            openpgp.descifraMsg(chavePrivada, value.mensagem,(plainText)=>{
                 callback( {
                     message: plainText.data,
                     date: '14:00',
