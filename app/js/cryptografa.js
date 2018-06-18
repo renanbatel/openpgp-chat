@@ -22,7 +22,7 @@ function geraChave(nome, email) { // gera chave com o nome e email do usuario
     });
 
 }
-function cifraMsg(publicKey, privkey, message) {
+function cifraMsg(publicKey, privkey, message, callback) {
     var options = {
         data: message, // mensagem a ser cifrada
         publicKeys: openpgp.key.readArmored(publicKey).keys, //chave pra cifrar
@@ -30,17 +30,17 @@ function cifraMsg(publicKey, privkey, message) {
         
     }
     openpgp.encrypt(options).then(cipherText => {
-        console.log(cipherText.data)
-        cifrada = cipherText.data; //texto cifrado é passado 
+        console.log(cipherText.data) 
+        callback(cipherText);//passa a mensagem através do callback
     })
 }
-function descifraMsg(privtKey, message) {
+function descifraMsg(privtKey, message, callback) {
     var options = {
         message: openpgp.message.readArmored(message), //mensagem cifrada a ser convertida para texto
         privateKeys: openpgp.key.readArmored(privtKey).keys[0]// chave usada para converter a mensagem
     }
     openpgp.decrypt(options).then(plaintext => {
-        return plaintext.data //retorna a mensagem descrifrada
+        callback(plaintext) //retorna a mensagem descrifrada
     })
 }
 function getCifrada() {

@@ -59,7 +59,8 @@ let   control      = false;
 
 function sendMessage() {
   const content = mensagem.value;
-  firebaseFunctions.enviarMensagem( currentContact.dataset.uid, content, () => {
+  console.log(currentContact)
+  firebaseFunctions.enviarMensagem(currentContact.dataset.pubKey, currentContact.dataset.uid, content, () => {
     mensagem.value = '';
   } );
 }
@@ -194,6 +195,7 @@ try {
 function loadMessagesView( user ) {
   currentContact.innerText   = user.name;
   currentContact.dataset.uid = user.uid;
+  currentContact.dataset.pubKey = user.pubKey;
 }
 
 /**
@@ -239,7 +241,8 @@ function changeContactView() {
 
   const user = {
     name: this.dataset.name,
-    uid : this.dataset.uid
+    uid : this.dataset.uid,
+    pubKey: this.dataset.pubkey
   }
   loadMessages( user );
 }

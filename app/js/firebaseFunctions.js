@@ -253,11 +253,13 @@ function carregaMensagem(OutroUser, callback) {
             } );
         }
         else if( value.uidEmitente == OutroUser && value.uidDestinatario == user.uid ) {
-            callback( {
-                message: value.mensagem,
-                date: '14:00',
-                from: OutroUser
-            } );
+            openpgp.descifraMsg(chavePrivada, value.message,(plainText)=>{
+                callback( {
+                    message: plainText.data,
+                    date: '14:00',
+                    from: OutroUser
+                } );
+            } )
         }
     }
     if (user) {
@@ -271,16 +273,21 @@ function carregaMensagem(OutroUser, callback) {
     // } );
 }
 
-function enviarMensagem(uidDestinatario, content, callback) {
+function enviarMensagem( destPubKey, uidDestinatario, content, callback) {
     var user = firebase.auth().currentUser;
-    if (user) {
-        var mensagem = database.ref('mensagens/');
-        mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: content }).then(
-            callback()
-        );
-    } else {
-        console.log('USUARIO NÃO LOGADO')
-    }
+    openpgp.cifraMsg(destPubKey, chavePrivada, content,(cipherText)=>{
+        console.log(cipherText.data);
+        if (user) {
+            var mensagem = database.ref('mensagens/');
+            mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: cipherText.data }).then(
+                callback()
+            );
+        } else {
+            console.log('USUARIO NÃO LOGADO')
+        }
+ 
+    })
+    
 }
 
 function getCurrentUser() {
