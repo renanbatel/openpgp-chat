@@ -2,8 +2,8 @@
 
 @mixin custom-scroll-bar( $background, $bar ) {
   &::-webkit-scrollbar {
-    width: 11px;
-    height: 11px;
+    width: 8px;
+    height: 8px;
   }
   &::-webkit-scrollbar-button {
     width: 0px;

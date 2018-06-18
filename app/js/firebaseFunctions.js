@@ -94,7 +94,6 @@ function validaSignup() {
                         }
                     });
                 } else {
-                    console.log(verificaPath)
                     swal({
                         title: 'Oops!',
                         text: 'Selecione um caminho valido ou o usuario não será criado',
@@ -196,7 +195,6 @@ function addContato(uid, email, callback) {
         if (usuRef) {
             info.forEach(i => {
                 var obj = i[Object.keys(i)[0]];
-                console.log( obj );
                 if (obj.email == email) {
                     notFound = false;
                     usuRef.push({
@@ -244,7 +242,6 @@ function getAllContatos(callback) {
 
 function carregaMensagem(OutroUser, callback) {
     var user = firebase.auth().currentUser;
-    console.log( OutroUser, user.uid );
     var mensagem = database.ref('mensagens/');
     mensagem.off();
     var setMensagem = function (data) {
@@ -274,11 +271,13 @@ function carregaMensagem(OutroUser, callback) {
     // } );
 }
 
-function enviarMensagem(uidDestinatario, content) {
+function enviarMensagem(uidDestinatario, content, callback) {
     var user = firebase.auth().currentUser;
     if (user) {
         var mensagem = database.ref('mensagens/');
-        mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: content });
+        mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: content }).then(
+            callback()
+        );
     } else {
         console.log('USUARIO NÃO LOGADO')
     }

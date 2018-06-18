@@ -7,6 +7,7 @@ const validation        = require( './js/validation' );
 const openpgp           = require('./js/cryptografa');
 const helpers           = require('./js/helpers')
 
+const messagesView = document.getElementById( 'messagesView' );
 const currentUser = document.getElementById( 'currentUser' );
 const btnLogout    = document.getElementById('logout');
 const btnaddChave    = document.getElementById('addchave');
@@ -54,12 +55,13 @@ btnLogout.addEventListener('click', (event)=>{
 
 //  ##  Message
 
-let control = false;
+let   control      = false;
 
 function sendMessage() {
   const content = mensagem.value;
-  console.log( content );
-  firebaseFunctions.enviarMensagem( currentContact.dataset.uid, content );
+  firebaseFunctions.enviarMensagem( currentContact.dataset.uid, content, () => {
+    mensagem.value = '';
+  } );
 }
 
 btnSend.addEventListener('click', sendMessage );
@@ -199,27 +201,6 @@ function loadMessagesView( user ) {
  */
 
 function loadMessagesTemplate( user ) {
-  let messages = new Array();
-
-  // if( user ) {
-  //   messages = [
-  //     {
-  //       message: 'Eae man, suave?',
-  //       date: '12:00',
-  //     }, {
-  //       message: 'Suave man, e ae?',
-  //       date: '12:02',
-  //       from: 'contact'
-  //     }, {
-  //       message: 'Spicy jalapeno bacon ipsum dolor amet bresaola fatback picanha meatloaf. Venison ham turducken, pork biltong brisket beef ribs',
-  //       date: '12:05',
-  //     }, {
-  //       message: 'Tri-tip pancetta ham hock jowl capicola meatball. Kielbasa swine pig, pastrami pork loin ball tip shoulder pork chop',
-  //       date: '12:08',
-  //       from: 'contact'
-  //     }
-  //   ];
-  // }
 
   const source           = document.getElementById( 'messages' );
         source.innerHTML = '';
@@ -227,6 +208,7 @@ function loadMessagesTemplate( user ) {
   firebaseFunctions.carregaMensagem( user.uid, ( message ) => {
     const template          = Handlebars.templates[ 'message' ]( message );
           source.innerHTML += template;
+    messagesView.scrollTop = messagesView.scrollHeight;
   } );
 }
 
