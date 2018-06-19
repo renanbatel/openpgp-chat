@@ -226,24 +226,31 @@ function Adicionado(){
     var contato = database.ref('notificacoes');
     var add = (data) => {
         var value = data.val();
-        if(value.adicionado == user.uid){
-            swal( {
-                title: 'Você foi adicionado!',
-                text: 'Deseja adicionar o contato'+value.nomeAdicionando+' ao seus contatos',
-                buttons: {
-                    cancel: { 
-                      text: 'Cancelar',
-                      closeModal: true,
-                      visible: true
-                    }, 
-                    confirm: {
-                      text: 'Adicionar',
-                      value: true,
-                      closeModal: false,
-                      className: 'prevent-loading',
+        //console.log(user.uid)
+        //console.log(value)
+        if(value && user){
+            if(value.adicionado == user.uid){
+                swal( {
+                    title: 'Você foi adicionado!',
+                    text: 'Deseja adicionar o contato'+value.nomeAdicionando+' ao seus contatos',
+                    buttons: {
+                        cancel: { 
+                          text: 'Cancelar',
+                          closeModal: true,
+                          visible: true
+                        }, 
+                        confirm: {
+                            onClick:()=>{
+                                console.log('pegou o click')
+                            },
+                          text: 'Adicionar',
+                          value: true,
+                          closeModal: false,
+                          className: 'prevent-loading',
+                        }
                     }
-                }
-            } )
+                } )
+            }
         }
     }
     if (contato) {
@@ -368,5 +375,7 @@ module.exports = {
     setChavePrivada,
     getCurrentUser,
     getChavePrivada,
-    setCurrentUserData
+    setCurrentUserData,
+    Adicionado
+
 }

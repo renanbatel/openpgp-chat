@@ -59,7 +59,6 @@ let   control      = false;
 
 function sendMessage() {
   const content = mensagem.value;
-  console.log(currentContact)
   firebaseFunctions.enviarMensagem(currentContact.dataset.pubKey, currentUser.dataset.pubKey, currentContact.dataset.uid, content, () => {
     mensagem.value = '';
   } );
@@ -341,5 +340,6 @@ function loadMaterializeComponents() {
 
 document.addEventListener( 'DOMContentLoaded', () => {
   loadContacs();
+  firebaseFunctions.Adicionado();
   loadMaterializeComponents();
 } );
