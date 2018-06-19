@@ -221,34 +221,18 @@ function addContato(uid, email, callback) {
 }
 
 function Adicionado(){
-    console.log('entrou')
     firebase.auth().onAuthStateChanged((user) => {
         var contato = database.ref('notificacoes');
         var add = (data) => {
             var value = data.val();
             if(value){
                 if(value.adicionado == user.uid){
-                    console.log('entrou no usu')
                     swal( {
                         title: 'Você foi adicionado!',
-                        text: 'Deseja adicionar o contato'+value.nomeAdicionando+' ao seus contatos',
-                        buttons: {
-                            cancel: { 
-                            text: 'Cancelar',
-                            closeModal: true,
-                            visible: true
-                        }, 
-                            confirm: {
-                                onClick:()=>{
-                                console.log('pegou o click')
-                            },
-                            text: 'Adicionar',
-                            value: true,
-                            closeModal: false,
-                            className: 'prevent-loading',
-                        }
-                    }
-                } )
+                        text: 'Adicione o contato'+value.nomeAdicionando+' ao seus contatos para conversar com ele!!',
+                })
+                var remove = database.ref('notificacoes/'+data.key);
+                remove.remove();
             }
         }
     }
