@@ -110,7 +110,7 @@ function addNewContact( email ) {
       icon: 'success',
       title: 'Contato adicionado',
     } );
-  } );
+  }, true );
 }
 
 /**
@@ -341,5 +341,7 @@ function loadMaterializeComponents() {
 document.addEventListener( 'DOMContentLoaded', () => {
   loadContacs();
   loadMaterializeComponents();
-  firebaseFunctions.Adicionado();
+  firebaseFunctions.Adicionado( () => {
+    loadContacs();
+  } );
 } );

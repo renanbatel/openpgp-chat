@@ -187,7 +187,7 @@ function getChavePrivada( chavepriv ) {
     return chavePrivada;
 }
 
-function addContato(uid, email, callback) {
+function addContato(uid, email, callback, notification) {
     var usu = firebase.auth().currentUser;
     getAllUsuarios( (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
@@ -202,8 +202,10 @@ function addContato(uid, email, callback) {
                    usuRef.push({
                         nome: obj.name, uid: obj.id, chavePublica: obj.chavePublica
                     });
-                    notifi.push({ adicionado: obj.id, adicionando: uid, nomeAdicionando: usu.email});
-                    Adicionado(); //função a baixo
+                    if( notification ) {
+                        notifi.push({ adicionado: obj.id, adicionando: uid, nomeAdicionando: usu.email});
+                        Adicionado();
+                    }
                     callback();
                 }
             });
@@ -220,7 +222,7 @@ function addContato(uid, email, callback) {
     });
 }
 
-function Adicionado(){
+function Adicionado( callback ){
     firebase.auth().onAuthStateChanged((user) => {
         var contato = database.ref('notificacoes');
         var add = (data) => {
@@ -228,9 +230,26 @@ function Adicionado(){
             if(value){
                 if(value.adicionado == user.uid){
                     swal( {
-                        title: 'Você foi adicionado!',
-                        text: 'Adicione o contato'+value.nomeAdicionando+' ao seus contatos para conversar com ele!!',
-                })
+                        title: value.nomeAdicionando + ' quer te adicionar!',
+                        text: 'Aceite a solicitção para adiciona-lo a seus contatos',
+                        buttons: {
+                            cancel: {
+                                text: 'Recusar',
+                                value: null,
+                                closeModal: true,
+                                visible: true
+                            },
+                            confirm: {
+                                text: 'Aceitar',
+                                value: true,
+                                closeModal: true,
+                                visible: true
+                            }
+                        }
+                    } ).then( ( v ) => {
+                        if( v )
+                            addContato( user.uid, value.nomeAdicionando, callback, false );
+                    } )
                 var remove = database.ref('notificacoes/'+data.key);
                 remove.remove();
             }
