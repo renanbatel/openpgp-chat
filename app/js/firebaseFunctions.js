@@ -188,24 +188,29 @@ function getChavePrivada( chavepriv ) {
 }
 
 function addContato(uid, email, callback) {
+    var usu = firebase.auth().currentUser;
+    console.log(usu);
     getAllUsuarios( (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
         var notifi = database.ref('notificacoes');
         var notFound = true;
-        info.forEach(i => {
-            console.log('outro teste')
-            var obj = i[Object.keys(i)[0]];
-            if (obj.email == email) {
-                notFound = false;
-               usuRef.push({
-                    nome: obj.name, uid: obj.id, chavePublica: obj.chavePublica
-                });
-                console.log('teste')
-                notifi.push({ adicionado: obj.uid, adicionando: uid });
-                callback();
-            }
-        });
+        if(usuRef){
+            info.forEach(i => {
+                var obj = i[Object.keys(i)[0]];
+                if (obj.email == email) {
+                    notFound = false;
+                   usuRef.push({
+                        nome: obj.name, uid: obj.id, chavePublica: obj.chavePublica
+                    });
+                    notifi.push({ adicionado: obj.id, adicionando: uid, nomeAdicionando: usu.email});
+                    Adicionado(); //função a baixo
+                    callback();
+                }
+            });
+        }else{
+            console.log('ERRO ao referenciar usuario/informacao no bd add contato')
+        }
         if( notFound ) {
             swal( {
                 icon: 'error',
@@ -218,7 +223,32 @@ function addContato(uid, email, callback) {
 
 function Adicionado(){
     var user = firebase.auth().currentUser;
-    var contato = database.ref();
+    var contato = database.ref('notificacoes');
+    var add = (data) => {
+        var value = data.val();
+        if(value.adicionado == user.uid){
+            swal( {
+                title: 'Você foi adicionado!',
+                text: 'Deseja adicionar o contato'+value.nomeAdicionando+' ao seus contatos',
+                buttons: {
+                    cancel: { 
+                      text: 'Cancelar',
+                      closeModal: true,
+                      visible: true
+                    }, 
+                    confirm: {
+                      text: 'Adicionar',
+                      value: true,
+                      closeModal: false,
+                      className: 'prevent-loading',
+                    }
+                }
+            } )
+        }
+    }
+    if (contato) {
+        contato.on('child_added', add);
+    }
 }
 
 function getAllUsuarios(callback) {
@@ -228,7 +258,7 @@ function getAllUsuarios(callback) {
         snapshot.forEach(function (childSnapshot) {
             usuInfo.push(childSnapshot.val());
         });
-        //callback(usuInfo);
+        callback(usuInfo);
     });
 }
 
