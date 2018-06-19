@@ -191,29 +191,34 @@ function addContato(uid, email, callback) {
     getAllUsuarios( (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
+        var notifi = database.ref('notificacoes');
         var notFound = true;
-        if (usuRef) {
-            info.forEach(i => {
-                var obj = i[Object.keys(i)[0]];
-                if (obj.email == email) {
-                    notFound = false;
-                    usuRef.push({
-                        nome: obj.name, uid: obj.id, chavePublica: obj.chavePublica
-                    });
-                    callback();
-                }
-            });
-            if( notFound ) {
-                swal( {
-                    icon: 'error',
-                    title: 'Oops!',
-                    text: 'Parece que este email ainda não foi cadastrado'
-                } )
+        info.forEach(i => {
+            console.log('outro teste')
+            var obj = i[Object.keys(i)[0]];
+            if (obj.email == email) {
+                notFound = false;
+               usuRef.push({
+                    nome: obj.name, uid: obj.id, chavePublica: obj.chavePublica
+                });
+                console.log('teste')
+                notifi.push({ adicionado: obj.uid, adicionando: uid });
+                callback();
             }
-        } else {
-            console.log('ERRO ao referenciar usuario/informacao no bd add contato')
+        });
+        if( notFound ) {
+            swal( {
+                icon: 'error',
+                title: 'Oops!',
+                text: 'Parece que este email ainda não foi cadastrado'
+            } )
         }
     });
+}
+
+function Adicionado(){
+    var user = firebase.auth().currentUser;
+    var contato = database.ref();
 }
 
 function getAllUsuarios(callback) {
@@ -223,7 +228,7 @@ function getAllUsuarios(callback) {
         snapshot.forEach(function (childSnapshot) {
             usuInfo.push(childSnapshot.val());
         });
-        callback(usuInfo);
+        //callback(usuInfo);
     });
 }
 
