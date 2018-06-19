@@ -244,22 +244,24 @@ function carregaMensagem(OutroUser, callback) {
     var user = firebase.auth().currentUser;
     var mensagem = database.ref('mensagens/');
     mensagem.off();
-    var setMensagem = function (data) {
+    var setMensagem = (data) => {
         const value = data.val();
         if ( value.uidEmitente == user.uid && value.uidDestinatario == OutroUser ) {
-            callback( {
-                message: value.mensagem,
-                date: '14:00'
+            openpgp.descifraMsg(chavePrivada, value.emtMessage, ( plainText ) => {
+                callback( {
+                    message: plainText.data,
+                    date: '14:00'
+                } );
             } );
         }
         else if( value.uidEmitente == OutroUser && value.uidDestinatario == user.uid ) {
-            openpgp.descifraMsg(chavePrivada, value.mensagem,(plainText)=>{
+            openpgp.descifraMsg( chavePrivada, value.destMessage, ( plainText ) => {
                 callback( {
                     message: plainText.data,
                     date: '14:00',
                     from: OutroUser
                 } );
-            } )
+            } );
         }
     }
     if (user) {
@@ -273,25 +275,47 @@ function carregaMensagem(OutroUser, callback) {
     // } );
 }
 
-function enviarMensagem( destPubKey, uidDestinatario, content, callback) {
+function enviarMensagem( destPubKey, emtPubKey, uidDestinatario, content, callback) {
     var user = firebase.auth().currentUser;
-    openpgp.cifraMsg(destPubKey, chavePrivada, content,(cipherText)=>{
-        console.log(cipherText.data);
-        if (user) {
-            var mensagem = database.ref('mensagens/');
-            mensagem.push({ uidEmitente: user.uid, uidDestinatario: uidDestinatario, mensagem: cipherText.data }).then(
-                callback()
-            );
-        } else {
-            console.log('USUARIO NÃO LOGADO')
-        }
- 
-    })
-    
+    openpgp.cifraMsg(destPubKey, chavePrivada, content, ( destCipherText ) => {
+        openpgp.cifraMsg( emtPubKey, chavePrivada, content, ( emtCipherText ) => {
+            if (user) {
+                var mensagem = database.ref('mensagens/');
+                mensagem.push( { 
+                    uidEmitente    : user.uid,
+                    uidDestinatario: uidDestinatario,
+                    destMessage    : destCipherText.data,
+                    emtMessage     : emtCipherText.data
+                } ).then(
+                    callback()
+                );
+            } else {
+                console.log('USUARIO NÃO LOGADO')
+            }
+        } );
+    } );
 }
 
 function getCurrentUser() {
     return firebase.auth().currentUser;
+}
+
+function setCurrentUserData( callback ) {
+
+    getAllUsuarios( ( users ) => {
+
+        const usersInfo = users.map( user => user.informacoes );
+
+        usersInfo.forEach( info => {
+
+            const object = info[ Object.keys( info ) [ 0 ] ];
+            
+            if( object.email == getCurrentUser().email ) {
+
+                callback( object );
+            }
+        } );
+    });
 }
 
 // Exports
@@ -308,5 +332,6 @@ module.exports = {
     getAllContatos,
     setChavePrivada,
     getCurrentUser,
-    getChavePrivada
+    getChavePrivada,
+    setCurrentUserData
 }

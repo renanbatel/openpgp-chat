@@ -60,7 +60,7 @@ let   control      = false;
 function sendMessage() {
   const content = mensagem.value;
   console.log(currentContact)
-  firebaseFunctions.enviarMensagem(currentContact.dataset.pubKey, currentContact.dataset.uid, content, () => {
+  firebaseFunctions.enviarMensagem(currentContact.dataset.pubKey, currentUser.dataset.pubKey, currentContact.dataset.uid, content, () => {
     mensagem.value = '';
   } );
 }
@@ -119,10 +119,11 @@ function addNewContact( email ) {
  */
 
 function loadUserData() {
-  const user = firebaseFunctions.getCurrentUser();
-
-  currentUser.innerText   = 'Não tem displayName';//user.displayName;
-  currentUser.dataset.uid = user.uid;
+  firebaseFunctions.setCurrentUserData( ( user ) => {
+    currentUser.innerText      = user.name;
+    currentUser.dataset.uid    = user.id;
+    currentUser.dataset.pubKey = user.chavePublica;
+  } );
 }
 
 /**
