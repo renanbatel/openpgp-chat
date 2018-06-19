@@ -340,6 +340,6 @@ function loadMaterializeComponents() {
 
 document.addEventListener( 'DOMContentLoaded', () => {
   loadContacs();
-  firebaseFunctions.Adicionado();
   loadMaterializeComponents();
+  firebaseFunctions.Adicionado();
 } );

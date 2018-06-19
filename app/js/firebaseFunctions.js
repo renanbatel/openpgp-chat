@@ -189,7 +189,6 @@ function getChavePrivada( chavepriv ) {
 
 function addContato(uid, email, callback) {
     var usu = firebase.auth().currentUser;
-    console.log(usu);
     getAllUsuarios( (usuarios) => {
         var info = usuarios.map(r => r.informacoes);
         var usuRef = database.ref('usuarios/' + uid + '/contatos');
@@ -222,31 +221,31 @@ function addContato(uid, email, callback) {
 }
 
 function Adicionado(){
-    var user = firebase.auth().currentUser;
-    var contato = database.ref('notificacoes');
-    var add = (data) => {
-        var value = data.val();
-        //console.log(user.uid)
-        //console.log(value)
-        if(value && user){
-            if(value.adicionado == user.uid){
-                swal( {
-                    title: 'Você foi adicionado!',
-                    text: 'Deseja adicionar o contato'+value.nomeAdicionando+' ao seus contatos',
-                    buttons: {
-                        cancel: { 
-                          text: 'Cancelar',
-                          closeModal: true,
-                          visible: true
+    console.log('entrou')
+    firebase.auth().onAuthStateChanged((user) => {
+        var contato = database.ref('notificacoes');
+        var add = (data) => {
+            var value = data.val();
+            if(value){
+                if(value.adicionado == user.uid){
+                    console.log('entrou no usu')
+                    swal( {
+                        title: 'Você foi adicionado!',
+                        text: 'Deseja adicionar o contato'+value.nomeAdicionando+' ao seus contatos',
+                        buttons: {
+                            cancel: { 
+                            text: 'Cancelar',
+                            closeModal: true,
+                            visible: true
                         }, 
-                        confirm: {
-                            onClick:()=>{
+                            confirm: {
+                                onClick:()=>{
                                 console.log('pegou o click')
                             },
-                          text: 'Adicionar',
-                          value: true,
-                          closeModal: false,
-                          className: 'prevent-loading',
+                            text: 'Adicionar',
+                            value: true,
+                            closeModal: false,
+                            className: 'prevent-loading',
                         }
                     }
                 } )
@@ -256,6 +255,7 @@ function Adicionado(){
     if (contato) {
         contato.on('child_added', add);
     }
+    });
 }
 
 function getAllUsuarios(callback) {
